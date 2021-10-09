@@ -1,0 +1,9 @@
+.header {
+  display: flex;
+  margin-bottom: 16px;
+}
+
+.header .title {
+  padding-top: 8px;
+  margin-right: 16px;
+}

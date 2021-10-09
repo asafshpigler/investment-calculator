@@ -1,4 +1,4 @@
-.login {
+.login-signup {
   height: 100%;
 
   display: flex;
@@ -7,20 +7,21 @@
   align-items: center;
 }
 
-/*
-  override react material ui css:
-  requires class specifity of atlest 2, unless using a CSS in JS solution
-*/
-
-.login .title {
+.login-signup .title {
   margin-bottom: 20px;
   font-weight: bold;
 }
 
 .form {
   display: flex;
+  flex-direction: column;
 }
 
-.login .form__input {
-  margin-right: 20px;
-} 
+.form .form-input {
+  margin-bottom: 20px;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: space-between;
+}

@@ -1,0 +1,38 @@
+.expenses-card .title {
+  margin-bottom: 16px;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.input-container .input-label {
+  margin-right: 24px;
+}
+
+.payment-period {
+  margin-bottom: 16px;
+}
+
+.loan-rate-container {
+  align-items: initial;
+}
+
+.input-container .loan-rate-label {
+  margin-right: 36px;
+}
+
+.loan-rate-slider {
+  max-width: 270px;
+}
+
+.submit-btn-container {
+  display: flex;
+  justify-content: center;
+}
+
+.submit-btn-container .MuiButton-root {
+  padding: 8px 48px;
+}

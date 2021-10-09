@@ -1,0 +1,36 @@
+.chart-and-numbers-container {
+  display: flex;
+  margin-bottom: 24px;
+}
+
+.chart-and-numbers-container .chart-card {
+  flex-grow: 1;
+  margin-right: 24px;
+}
+
+.property-numbers-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.property-number { 
+  padding: 20px;
+  text-align: center;
+}
+
+.property-number > .number {
+  font-weight: bold;
+}
+
+.property-number.income {
+  background-color: aquamarine;
+}
+
+.property-number.expense {
+  background-color: lightcoral;
+}
+
+.property-number.profit {
+  background-color: lightskyblue;
+}

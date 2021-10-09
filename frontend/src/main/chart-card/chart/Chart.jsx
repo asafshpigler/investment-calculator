@@ -47,8 +47,21 @@ const data = {
   ]
 }
 
+const options = {
+  scales: {
+    y: {
+      ticks: {
+          // Include a dollar sign in the ticks
+          callback: function(value) {
+              return value + '$';
+          }
+      }
+    }
+  }
+}
+
 const MultiType = () => (
-  <Bar data={data} />
+  <Bar data={data} options={options} />
 )
 
 export default MultiType;
