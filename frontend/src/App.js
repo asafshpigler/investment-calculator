@@ -4,7 +4,7 @@ import Main from './main/Main';
 
 import { getUsers } from './services/api';
 
-const isLoggedIn = false;
+const isLoggedIn = true;
 getUsers();
 
 function App() {
