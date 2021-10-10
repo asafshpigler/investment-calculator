@@ -5,3 +5,8 @@ export async function getUsers() {
       console.log(res);
     });
 }
+
+export async function getCharts() {
+  return fetch('/charts')
+  .then(res => res.json())
+}

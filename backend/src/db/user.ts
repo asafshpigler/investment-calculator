@@ -1,18 +1,9 @@
-import { UserDTO } from '../models/User.table';
+import { UserDBO } from '../models/User';
 import { client } from './connection';
 
 const USER_TABLE = 'public.user';
 
-/* 
-  add professional SQL escaping
-  build queries for all your CRUD on each table
-
-  User table
-  C - signup
-  R - signup, login
-*/
-
-export async function getUser(userName: string): Promise<UserDTO> {
+export async function getUser(userName: string): Promise<UserDBO> {
   return await client
     .query(
       `SELECT * FROM ${USER_TABLE}
@@ -21,7 +12,7 @@ export async function getUser(userName: string): Promise<UserDTO> {
     .then(res => res.rows[0])
 }
 
-export async function insertUser(userName: string): Promise<UserDTO> {
+export async function insertUser(userName: string): Promise<UserDBO> {
   return await client
     .query(
       `INSERT INTO ${USER_TABLE}(name)

@@ -1,4 +1,4 @@
-export interface PropertyPeriodDTO {
+export interface PropertyPeriodDBO {
   id: number;
   property_id: number;
   year: number;

@@ -1,4 +1,5 @@
 
+import { connect } from './db/connection';
 import attachRoutes from './api/attachRoutes';
 
 const express = require('express');
@@ -13,4 +14,6 @@ attachRoutes(app);
 
 app.listen(PORT, () => {
     console.log(`Server listening on the port::${PORT}`);
+
+    connect();
 });

@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as csv from 'fast-csv';
 import { client, connect } from './connection';
-import { PropertyPeriodDTO } from '../models/PropertyPeriods.table';
+import { PropertyPeriodDBO } from '../models/PropertyPeriod';
 
 const FILE_PATH = path.resolve(__dirname, 'property_data.csv');
 
@@ -26,7 +26,7 @@ interface PropertyPeriodCsvRow {
       .pipe(csv.parse({ headers: true }))
       .on('error', error => console.error(error))
       .on('data', (csvRow: PropertyPeriodCsvRow) => {
-        const dbRow: PropertyPeriodDTO = {
+        const dbRow: PropertyPeriodDBO = {
           id: null,
           property_id: +csvRow[''],
           year: +csvRow.year,

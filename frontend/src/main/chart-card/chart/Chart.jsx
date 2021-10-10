@@ -1,20 +1,12 @@
 
 
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
+import Context from 'context';
 
 const rand = () => Math.round(Math.random() * 20 - 10)
 
 const SHORTHAND_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Dec', 'Nov', 'Dec']
-
-const INCOME_DATASET = {
-  type: 'line',
-  label: 'Income',
-  borderColor: 'rgb(54, 162, 235)',
-  borderWidth: 2,
-  fill: false,
-  data: [rand(), rand(), rand(), rand(), rand(), rand(), rand(), rand(), rand(), rand(), rand(), rand(), rand()],
-}
 
 const EXPENSES_DATASET = {
   type: 'line',
@@ -38,15 +30,6 @@ function createRevenueColors(nums) {
   return nums.map(num => num > 0 ? 'green' : 'red');
 }
 
-const data = {
-  labels: SHORTHAND_MONTHS,
-  datasets: [
-    INCOME_DATASET,
-    EXPENSES_DATASET,
-    NET_REVENUE_DATASET
-  ]
-}
-
 const options = {
   scales: {
     y: {
@@ -60,8 +43,32 @@ const options = {
   }
 }
 
-const MultiType = () => (
-  <Bar data={data} options={options} />
-)
+const MultiType = () => {
+  const context = useContext(Context);
+
+  console.log(context);
+
+  const INCOME_DATASET = {
+    type: 'line',
+    label: 'Income',
+    borderColor: 'rgb(54, 162, 235)',
+    borderWidth: 2,
+    fill: false,
+    data: context && context.charts && context.charts.incomes,
+  }
+
+  const data = {
+    labels: context && context.charts && context.charts.labels,
+    datasets: [
+      INCOME_DATASET,
+      EXPENSES_DATASET,
+      NET_REVENUE_DATASET
+    ]
+  }
+
+  return (
+    <Bar data={data} options={options} />
+  )
+}
 
 export default MultiType;
