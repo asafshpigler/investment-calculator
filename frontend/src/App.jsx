@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import LoginSignup from './login-signup/LoginSignup';
 import Main from './main/Main';
 import Context from './context';
+import _get from 'lodash/get';
 
-import { getCharts, getPropertyExpenses } from './services/api';
+import { getCharts } from './services/api';
 
 const isLoggedIn = true;
 
@@ -12,15 +13,9 @@ function App() {
   const [expenses, setExpenses] = useState({});
   
   useEffect(() => {
-    getCharts().then(data => {
-      setCharts(data);
+    getCharts().then(chart => {
+      setCharts(chart);
     });
-
-    console.log('getting property expenses');
-    getPropertyExpenses().then(data => {
-      setExpenses(data);
-      console.log({data});
-    })
   }, [])
 
   return (

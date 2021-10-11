@@ -4,10 +4,14 @@
     "noImplicitAny": false,
     "outDir": "dist",
 
+    "lib": ["es2020"],
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+
     "module": "commonjs",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es6",
+    "target": "es2020",
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {

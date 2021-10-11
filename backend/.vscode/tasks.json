@@ -1,0 +1,39 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "build",
+      "group": "build",
+      "label": "npm: build - app",
+      "detail": "NODE_ENV=development tsc -p ."
+    },
+    {
+      "label": "start db",
+      "type": "shell",
+      "command": "docker compose up -d"
+    },
+    {
+      "label": "stop db",
+      "type": "shell",
+      "command": "docker compose down"
+    },
+    {
+      "type": "shell",
+      "label": "clean app",
+      "command": "rm -rf ./build"
+    },
+    {
+      "label": "prepare app to debug",
+      "type": "npm",
+      "script": "build",
+    },
+    {
+      "label": "clean app after debug",
+      "type": "shell",
+      "command": "echo clean app after debug",
+      "dependsOrder": "sequence",
+      "dependsOn": ["stop db", "clean app"]
+    }
+  ]
+}

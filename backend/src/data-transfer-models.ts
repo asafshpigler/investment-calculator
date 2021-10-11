@@ -2,6 +2,7 @@ export interface ChartDTO {
   propertyId: number;
   labels: string[];
   incomes: number[];
+  netRevenues: number[]
   monthlyExpenses: number[];
   oneTimeExpenses: number[];
   mortgageExpenses: number[];
@@ -17,12 +18,12 @@ export interface PropertyExpensesDTO {
 }
 
 export interface OneTimeExpenseDTO {
-  paymentDate: Date;
-  amount: Date;
+  paymentDate: PgDate;
+  amount: number;
 }
 
 export interface MonthlyExpenseDTO {
-  startDate: Date;
+  startDate: PgDate;
   amount: number;
   duration: number;
 }
@@ -30,7 +31,7 @@ export interface MonthlyExpenseDTO {
 export type MortgageExpenseDTO = NormalLoanDTO | SpitzerLoanDTO
 
 interface NormalLoanDTO {
-  startDate: Date;
+  startDate: PgDate;
   amount: number;
   paymentPeriods: PaymentPeriodDBO[]
 }
@@ -41,8 +42,13 @@ interface PaymentPeriodDBO {
 }
 
 interface SpitzerLoanDTO {
-  startDate: Date;
+  startDate: PgDate;
   amount: number;
   duration :number;
   loanRate: number;
 }
+
+// postgres works with dates in the format of year-month-day, when the column type is Date
+// in this codebase, the dates are saved inside jsonb columns. the format in which the dates will be saved
+// inside jsonb will conform as well.
+export type PgDate = `${number}-${number}-${number}`;

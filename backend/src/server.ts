@@ -1,6 +1,6 @@
 
 import { connect } from './db/connection';
-import attachRoutes from './api/attachRoutes';
+import attachRoutes from './routes/attachRoutes';
 
 const express = require('express');
 
