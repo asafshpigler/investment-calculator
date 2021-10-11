@@ -2,11 +2,11 @@ import moment from "moment";
 import { daysInMonth } from "./helpers";
 import { ChartDTO } from "../../../data-transfer-models";
 import { sum } from "./helpers";
-import { PropertyMonth } from "./models";
+import { PropertyMonthlyFigures } from "./models";
 
-export function convert(propertyId: number, propertyMonths: PropertyMonth[]): ChartDTO {
+export function convert(propertyId: number, propertyMonthlyFigures: PropertyMonthlyFigures[]): ChartDTO {
   // sort months in chronological order
-  propertyMonths.sort((a, b) => {
+  propertyMonthlyFigures.sort((a, b) => {
     if (a.year !== b.year) {
       return a.year - b.year;
     }
@@ -21,7 +21,7 @@ export function convert(propertyId: number, propertyMonths: PropertyMonth[]): Ch
   const oneTimeExpensesForChart = [];
   const netRevenues = [];
 
-  propertyMonths.forEach(pm => {
+  propertyMonthlyFigures.forEach(pm => {
     const {year, month, occupancyRate, nightlyPrice, oneTimeExpenses} = pm;
 
     const label: string = moment({ year, month: month - 1 }).format("MMM YY");

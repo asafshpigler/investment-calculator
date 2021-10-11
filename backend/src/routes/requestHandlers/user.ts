@@ -1,5 +1,5 @@
 import { getUser, insertUser } from "../../db/user";
-import { UserDBO } from "../../models/User";
+import { UserDBO } from "../../db/models/User";
 
 export async function handleSignupRequest(req, res, next) {
   const { userName } = req.body;

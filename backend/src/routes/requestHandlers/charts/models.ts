@@ -1,13 +1,13 @@
-export type PropertyMap = Map<number ,PropertyMonth[]>;
+export type PropertyMap = Map<number ,PropertyMonthlyFigures[]>;
 
-export interface PropertyMonth {
+export interface PropertyMonthlyFigures {
   year: number;
   month: number;
   occupancyRate: number;
   nightlyPrice: number;
   oneTimeExpenses: number[];
+}
 
   // propertyId: number;
   // monthlyExpenses: number[];
   // mortgageExpenses: number[];
-}

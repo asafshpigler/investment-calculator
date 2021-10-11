@@ -2,19 +2,13 @@ import { ADMIN_USER_ID } from "..";
 import { ChartDTO } from "../../../data-transfer-models";
 import { getAllPropertyPeriods } from "../../../db/paymentPeriod";
 import { getPropertyExpenses } from "../../../db/propertyExpenses";
-import { PropertyExpensesDBO } from "../../../models/PropertyExpenses";
-import { PropertyPeriodDBO } from "../../../models/PropertyPeriod";
+import { PropertyExpensesDBO } from "../../../db/models/PropertyExpenses";
+import { PropertyPeriodDBO } from "../../../db/models/PropertyPeriod";
 import { convert } from "./convert";
 import { getPropertyMap } from "./getPropertyMap";
 import { PropertyMap } from "./models";
 
 /*
-  cleanup - either create array clone in map iteration or remove set. seems redundant
-  mb remove map and use group by query instead. how will the result look?
-  will it simplify the code here? is it worth it considering the amount of time you have to work
-  measure the time it takes. it's stagnant data and you know how long it should repsond
-  100ms, after login. remember RAIL
-
   restructure charts folder, with separate files. make sure it makes sense
 
   confusing terminology, month, and period,
@@ -44,8 +38,8 @@ export async function handleGetCharts(req, res, next) {
     // convert data to the way chart.js likes it
     const charts: ChartDTO[] = [];
 
-    for (const [propertyId, propertyMonths] of propertyMap) {
-      const chart: ChartDTO = convert(propertyId, propertyMonths);
+    for (const [propertyId, monthlyFigures] of propertyMap) {
+      const chart: ChartDTO = convert(propertyId, monthlyFigures);
       charts.push(chart);
     }
    

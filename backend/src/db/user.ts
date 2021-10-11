@@ -1,4 +1,4 @@
-import { UserDBO } from '../models/User';
+import { UserDBO } from './models/User';
 import { client } from './connection';
 
 const USER_TABLE = 'public.user';

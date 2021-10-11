@@ -1,5 +1,5 @@
 
-import { PropertyExpensesDBO } from "../../models/PropertyExpenses";
+import { PropertyExpensesDBO } from "../../db/models/PropertyExpenses";
 import { getPropertyExpenses, upsertPropertyExpenses } from "../../db/propertyExpenses";
 import { PropertyExpensesDTO } from "../../data-transfer-models";
 import { ADMIN_USER_ID } from ".";

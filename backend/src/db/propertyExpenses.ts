@@ -1,5 +1,5 @@
 import { PropertyExpensesDTO } from '../data-transfer-models';
-import { PropertyExpensesDBO } from '../models/PropertyExpenses';
+import { PropertyExpensesDBO } from './models/PropertyExpenses';
 import { client } from './connection';
 
 const PROPERTY_EXPENSES_TABLE = 'public.property_expenses';

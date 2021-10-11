@@ -1,4 +1,4 @@
-import { MonthlyExpenseDTO, MortgageExpenseDTO, OneTimeExpenseDTO } from "../data-transfer-models";
+import { MonthlyExpenseDTO, MortgageExpenseDTO, OneTimeExpenseDTO } from "../../data-transfer-models";
 
 export interface PropertyExpensesDBO {
   id: number;

@@ -1,8 +1,8 @@
 import { PgDate } from "../../../data-transfer-models";
-import { PropertyMonth } from "./models";
+import { PropertyMonthlyFigures } from "./models";
 
-export function findPropertyMonth(propertyMonths: PropertyMonth[], year: number, month: number): PropertyMonth {
-  return propertyMonths.find(pm => pm.year === year && pm.month === month);
+export function findPropertyFigures(propertyMonthlyFigures: PropertyMonthlyFigures[], year: number, month: number): PropertyMonthlyFigures {
+  return propertyMonthlyFigures.find(pm => pm.year === year && pm.month === month);
 }
 
 export function extractDateParts(date: PgDate) {

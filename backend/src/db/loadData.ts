@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as csv from 'fast-csv';
 import { client, connect } from './connection';
-import { PropertyPeriodDBO } from '../models/PropertyPeriod';
+import { PropertyPeriodDBO } from './models/PropertyPeriod';
 
 const FILE_PATH = path.resolve(__dirname, 'property_data.csv');
 

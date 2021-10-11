@@ -1,4 +1,4 @@
-import { PropertyPeriodDBO } from '../models/PropertyPeriod';
+import { PropertyPeriodDBO } from './models/PropertyPeriod';
 import { client } from './connection';
 
 const PROPERTY_PERIOD_TABLE = 'public.property_period';
