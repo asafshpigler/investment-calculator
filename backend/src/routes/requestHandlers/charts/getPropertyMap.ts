@@ -1,7 +1,7 @@
 import { PropertyExpensesDBO } from "../../../db/models/PropertyExpenses";
 import { PropertyPeriodDBO } from "../../../db/models/PropertyPeriod";
 import { extractDateParts, findPropertyFigures } from "./helpers";
-import { PropertyMap, PropertyMonthlyFigures } from "./models";
+import { PropertyMap, PropertyMonthlyFigures } from "./charts";
 
 export function getPropertyMap(periods: PropertyPeriodDBO[], expenses: PropertyExpensesDBO[]): PropertyMap {
   const map: PropertyMap = new Map();
@@ -13,26 +13,26 @@ export function getPropertyMap(periods: PropertyPeriodDBO[], expenses: PropertyE
 }
 
 function mapPeriods(map: PropertyMap, periods: PropertyPeriodDBO[]) {
-  periods.forEach(p => {
-    const {property_id, year, month, nightly_price, occupancy_rate} = p;
+  periods.forEach(pr => {
+    const {property_id, year, month, nightly_price, occupancy_rate} = pr;
 
-    // get existing property months (prop id). if it's empty, return a new array
     let propertyMonthlyFigures: PropertyMonthlyFigures[] = map.get(property_id);
 
-    // save new array
+    /*
+      group properties by creating arraies of months, each with it's own figures
+      should be empty & initialized once per property
+    */
     if (propertyMonthlyFigures === undefined) {
       propertyMonthlyFigures = [];
       map.set(property_id, propertyMonthlyFigures);
     }
 
-    // sanity check: if the same year and month exist, throw an error, which one should I use
-    const isMonthExists: boolean = !!findPropertyFigures(propertyMonthlyFigures, year, month);
-    if (isMonthExists) {
-      throw new Error(`suspicious data: property_periods table contains more than one row with the same month and year
-        which is the correct income data for year: ${year} and month: ${month}`);
-    }
+    /*
+      add the newly extracted monthly figures (nightly_price & occupancy_rate)*
+      to the accumulation of many monthly figures of the current property
 
-    // insert an object (year, m, price, rate) into the array
+      *each period is unique, identified by year & month, enforced by DB
+    */
     const newMonth: PropertyMonthlyFigures = {
       year,
       month,
@@ -46,34 +46,30 @@ function mapPeriods(map: PropertyMap, periods: PropertyPeriodDBO[]) {
 }
 
 function mapExpenses(map: PropertyMap, expenses: PropertyExpensesDBO[]) {
+  // expenses - all of the user's expenses, one per property
+
   expenses.forEach(({property_id, one_time_expenses}) => {
-    // in property expanses table, there is a singular line per user per property id for all of
-    // that charts expenses
+    /*
+      for each expense (meaning each property)
+      get all of it's previously created months (containing income data)
+    */
+    const propertyMonthlyFigures: PropertyMonthlyFigures[] = map.get(property_id);
 
-    // using the current expense property id,
-    // we find the relevant property in map
-    // get it's months
-
-    // and push into the releant month the expense amount
-    // if that month doesn't exist, initialize it
-
-    // for each is intended to cover all of that user expenses
-    const propertyMonths: PropertyMonthlyFigures[] = map.get(property_id);
-    
+    /*
+      one_time_expenses - all of the property one time expenses, across various months
+      for each expense, detect at which month it's due, and attach it to previously created months
+    */
     one_time_expenses.forEach(({paymentDate, amount}) => {
-      // payment date is a string in a speicifc format. can i use typescript to specift this format?
       const {year, month} = extractDateParts(paymentDate);
 
-      const monthToAddExpensesTo = findPropertyFigures(propertyMonths, year, month);
+      const monthPaymentDue: PropertyMonthlyFigures = findPropertyFigures(propertyMonthlyFigures, year, month);
 
-      if (monthToAddExpensesTo) {
-        monthToAddExpensesTo.oneTimeExpenses.push(amount);
+      if (monthPaymentDue) {
+        // accumulate expenses in correct month, alongside income data for easy access per month
+        monthPaymentDue.oneTimeExpenses.push(amount);
       }
       else {
-        // can a user insert expenses on a month where he has no income to? perhaps.
-        // that is an edge case I would not advise. I can 
-        // what if that month doesn't exist yet?
-        // add it to the map, along with all other empty fields
+        // in case expense is due when there is no income data, and no previously created month, it's initialized here
         const newMonth: PropertyMonthlyFigures = {
           year,
           month,
@@ -81,7 +77,7 @@ function mapExpenses(map: PropertyMap, expenses: PropertyExpensesDBO[]) {
           occupancyRate: null,
           oneTimeExpenses: [amount],
         };
-        propertyMonths.push(newMonth);
+        propertyMonthlyFigures.push(newMonth);
       }
     })
   })

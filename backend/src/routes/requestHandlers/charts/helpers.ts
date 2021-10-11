@@ -1,5 +1,5 @@
 import { PgDate } from "../../../data-transfer-models";
-import { PropertyMonthlyFigures } from "./models";
+import { PropertyMonthlyFigures } from "./charts";
 
 export function findPropertyFigures(propertyMonthlyFigures: PropertyMonthlyFigures[], year: number, month: number): PropertyMonthlyFigures {
   return propertyMonthlyFigures.find(pm => pm.year === year && pm.month === month);

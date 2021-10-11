@@ -2,9 +2,10 @@ import moment from "moment";
 import { daysInMonth } from "./helpers";
 import { ChartDTO } from "../../../data-transfer-models";
 import { sum } from "./helpers";
-import { PropertyMonthlyFigures } from "./models";
+import { PropertyMonthlyFigures } from "./charts";
 
-export function convert(propertyId: number, propertyMonthlyFigures: PropertyMonthlyFigures[]): ChartDTO {
+// prepare data for chart display
+export function transformToChartFormat(propertyId: number, propertyMonthlyFigures: PropertyMonthlyFigures[]): ChartDTO {
   // sort months in chronological order
   propertyMonthlyFigures.sort((a, b) => {
     if (a.year !== b.year) {
@@ -15,7 +16,7 @@ export function convert(propertyId: number, propertyMonthlyFigures: PropertyMont
     }
   })
 
-  // convert to chart friendly data
+  // transform data
   const labels = [];
   const incomes = [];
   const oneTimeExpensesForChart = [];
@@ -25,24 +26,17 @@ export function convert(propertyId: number, propertyMonthlyFigures: PropertyMont
     const {year, month, occupancyRate, nightlyPrice, oneTimeExpenses} = pm;
 
     const label: string = moment({ year, month: month - 1 }).format("MMM YY");
-    
     const numOfDays: number = daysInMonth(year, month);
     const income: number = Math.trunc(numOfDays * occupancyRate * nightlyPrice);
-
     const oneTimeSum: number = sum(oneTimeExpenses);
-    
     const netRevenue: number = income - oneTimeSum;
     
     labels.push(label);
     incomes.push(income);
-  
-    // note: turn into a negative number, for visualization sake
-    oneTimeExpensesForChart.push(-oneTimeSum);
+    oneTimeExpensesForChart.push(-oneTimeSum); // note: turned to negative number
     netRevenues.push(netRevenue);
   })
 
-  // // push income, calc by multiplying
-  // chart.incomes.push(periodIncome);
   const chart: ChartDTO = {
     propertyId,
     labels,
