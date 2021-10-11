@@ -6,8 +6,6 @@ import Context from 'context';
 
 const rand = () => Math.round(Math.random() * 20 - 10)
 
-const SHORTHAND_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Dec', 'Nov', 'Dec']
-
 const EXPENSES_DATASET = {
   type: 'line',
   label: 'Expenses',
