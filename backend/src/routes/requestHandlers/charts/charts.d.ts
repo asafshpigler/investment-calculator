@@ -9,3 +9,8 @@ export interface PropertyMonthlyFigures {
   monthlyExpenses: number[];
   mortgageExpense: number;
 }
+
+export interface MonthId {
+  year: number;
+  month: number;
+}

@@ -1,34 +1,34 @@
 
-import React from 'react';
+import React, { useContext } from 'react';
 import Paper from '@mui/material/Paper';
 import ChartCard from './chart-card/ChartCard';
 import './Main.css';
 import ExpensesForm from './expenses-card/ExpensesCard';
-
-const AVG_ANNUAL_INCOME = 18000;
-const AVG_ANNUAL_EXPENSE = 9000;
-const AVG_ANNUAL_PROFIT = AVG_ANNUAL_INCOME - AVG_ANNUAL_EXPENSE;
-
-const propertyNumbers = [
-  {
-    txt: 'Avg Annual Income',
-    number: AVG_ANNUAL_INCOME,
-    className: 'income',
-  },
-  {
-    txt: 'Avg Annual Expense',
-    number: AVG_ANNUAL_EXPENSE,
-    className: 'expense',
-  },
-  {
-    txt: 'Avg Annual Profit',
-    number: AVG_ANNUAL_PROFIT,
-    className: 'profit',
-  }
-]
+import Context from 'context';
 
 
 function Main() {
+  const context = useContext(Context);
+  const { avgAnnualIncome, avgAnnualExpense, avgAnnualProfit } = context && context.charts;
+  
+  const propertyNumbers = [
+    {
+      txt: 'Avg Annual Income',
+      number: (avgAnnualIncome || '').toLocaleString(),
+      className: 'income',
+    },
+    {
+      txt: 'Avg Annual Expense',
+      number: (avgAnnualExpense || '').toLocaleString(),
+      className: 'expense',
+    },
+    {
+      txt: 'Avg Annual Profit',
+      number: (avgAnnualProfit || '').toLocaleString(),
+      className: 'profit',
+    }
+  ]
+  
   return (
     <main className="main">
       <div className="chart-and-numbers-container">

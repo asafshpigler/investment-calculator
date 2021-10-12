@@ -1,17 +1,16 @@
 import { PgDate } from "../../../data-transfer-models";
-import { PropertyMonthlyFigures } from "./charts";
+import { MonthId, PropertyMonthlyFigures } from "./charts";
 
-export function findPropertyFigures(propertyMonthlyFigures: PropertyMonthlyFigures[], year: number, month: number): PropertyMonthlyFigures {
-  return propertyMonthlyFigures.find(pm => pm.year === year && pm.month === month);
+export function findPropertyFigures(propertyMonthlyFigures: PropertyMonthlyFigures[], monthId: MonthId): PropertyMonthlyFigures {
+  return propertyMonthlyFigures.find(pm => pm.year === monthId.year && pm.month === monthId.month);
 }
 
-export function extractDateParts(date: PgDate) {
-  const [year, month, day] = date.split('-');
+export function extractMonthId(date: PgDate) {
+  const [year, month] = date.split('-');
 
   return {
     year: +year,
-    month: +month,
-    day: +day,
+    month: +month
   }
 }
 
@@ -40,5 +39,46 @@ export function createMonthlyFigures(monthlyFigures: Partial<PropertyMonthlyFigu
     oneTimeExpenses: oneTimeExpenses || [],
     monthlyExpenses: monthlyExpenses || [],
     mortgageExpense: mortgageExpense || null,
+  }
+}
+
+export function generateMonthIds(monthId: MonthId, duration: number): MonthId[] {
+  const monthIds: MonthId[] = [];
+  const {year: initialYear, month: initialMonth} = monthId;
+  
+  // insert the 1st month before incrementing
+  monthIds.push({year: initialYear, month: initialMonth});
+  
+  let currYear = initialYear;
+  let currMonth =  initialMonth;
+  
+  // we've already inserted 1 month so we iterate one time less than usual
+  for (let i = 0; i < duration-1; i++) {
+      const nextMonth: MonthId = incrementMonth(currYear, currMonth);
+      currYear = nextMonth.year;
+      currMonth = nextMonth.month;
+
+      monthIds.push({year: currYear, month: currMonth});
+    }
+
+  return monthIds;
+}
+
+// increment the following months. if you've reach 12 (Dec), go to Jan next year
+export function incrementMonth(year: number, month: number): MonthId {
+  let nextMonth = month 
+  let nextYear = year;
+
+  if (month === 12) {
+    nextMonth = 1;
+    nextYear++;
+  }
+  else {
+    nextMonth++;
+  }
+
+  return {
+    month: nextMonth,
+    year: nextYear
   }
 }

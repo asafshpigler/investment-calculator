@@ -6,5 +6,5 @@ export interface PropertyExpensesDBO {
   property_id: number;
   one_time_expenses: OneTimeExpenseDTO[],
   monthly_expenses: MonthlyExpenseDTO[],
-  mortgage_expenses: MortgageExpenseDTO,
+  mortgage_expense: MortgageExpenseDTO,
 }

@@ -7,7 +7,7 @@ import Context from 'context';
 const MultiType = () => {
   const context = useContext(Context);
 
-  const { labels, incomes, oneTimeExpenses, netRevenues } = context && context.charts;
+  const { labels, incomes, oneTimeExpenses, netRevenues, monthlyExpenses, mortgageExpenses } = context && context.charts;
 
   const data = {
     labels,
@@ -16,19 +16,29 @@ const MultiType = () => {
         type: 'line',
         label: 'Net Revenue',
         data: netRevenues,
-        backgroundColor: 'black',
+        backgroundColor: 'white',
         borderColor: 'black',
         borderWidth: 2,
       },
       {
-        label: 'income',
+        label: 'Income',
         data: incomes,
         backgroundColor: 'lightgreen',
       },
       {
-        label: 'expense',
+        label: 'Mortgage',
+        data: mortgageExpenses,
+        backgroundColor: '#931A25',
+      },
+      {
+        label: 'Monthly',
+        data: monthlyExpenses,
+        backgroundColor: '#E97171',
+      },
+      {
+        label: 'One Time',
         data: oneTimeExpenses,
-        backgroundColor: 'lightcoral',
+        backgroundColor: '#FFCB8E',
       }
     ]
   };

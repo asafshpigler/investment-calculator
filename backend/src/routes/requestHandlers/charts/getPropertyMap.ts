@@ -1,9 +1,11 @@
 import { PropertyExpensesDBO } from "../../../db/models/PropertyExpenses";
 import { PropertyPeriodDBO } from "../../../db/models/PropertyPeriod";
-import { createMonthlyFigures, extractDateParts, findPropertyFigures } from "./helpers";
-import { PropertyMap, PropertyMonthlyFigures } from "./charts";
-import { OneTimeExpenseDTO, MonthlyExpenseDTO, PgDate } from "../../../data-transfer-models";
+import { createMonthlyFigures, extractMonthId, findPropertyFigures, generateMonthIds, incrementMonth } from "./helpers";
+import { MonthId, PropertyMap, PropertyMonthlyFigures } from "./charts";
+import { OneTimeExpenseDTO, MonthlyExpenseDTO, PgDate, MortgageExpenseDTO, SpitzerLoanDTO, NormalLoanDTO } from "../../../data-transfer-models";
 
+const SPITZER_LOAN = 'spitzer';
+const NORMAL_LOAN = 'normal';
 
 export function getPropertyMap(periods: PropertyPeriodDBO[], expenses: PropertyExpensesDBO[]): PropertyMap {
   const map: PropertyMap = new Map();
@@ -47,21 +49,16 @@ function mapPeriods(map: PropertyMap, periods: PropertyPeriodDBO[]) {
 }
 
 function mapExpenses(map: PropertyMap, expenses: PropertyExpensesDBO[]) {
-  // expenses - all of the user's expenses, one per property
-
+  // expense - all of user's expenses for a specific property
   expenses.forEach((expense) => {
-    const { property_id, one_time_expenses, monthly_expenses, mortgage_expenses } = expense;
+    const { property_id, one_time_expenses, monthly_expenses, mortgage_expense } = expense;
 
-    /*
-      for each expense (meaning each property)
-      get all of it's previously created months (containing income data)
-    */
     const propertyMonthlyFigures: PropertyMonthlyFigures[] = map.get(property_id);
 
-    // attach expenses into the months they're due
+    // attach expenses into their respective months
     attachOneTimeExpenses(propertyMonthlyFigures, one_time_expenses);
     attachMonthlyExpenses(propertyMonthlyFigures, monthly_expenses);
-
+    attachMortgageExpense(propertyMonthlyFigures, mortgage_expense);
   })
 }
 
@@ -71,94 +68,130 @@ function mapExpenses(map: PropertyMap, expenses: PropertyExpensesDBO[]) {
 */
 function attachOneTimeExpenses(propertyMonthlyFigures: PropertyMonthlyFigures[], one_time_expenses: OneTimeExpenseDTO[]) {
   one_time_expenses.forEach(({ paymentDate, amount }) => {
-    const { year, month } = extractDateParts(paymentDate);
-
-    const monthPaymentDue: PropertyMonthlyFigures = findPropertyFigures(propertyMonthlyFigures, year, month);
-
-    if (monthPaymentDue) {
-      // accumulate expenses in correct month, alongside income data for easy access per month
-      monthPaymentDue.oneTimeExpenses.push(amount);
-    }
-    else {
-      // in case expense is due when there is no income data, and no previously created month, it's initialized here
-      const newMonth: PropertyMonthlyFigures = createMonthlyFigures({
-        year,
-        month,
-        oneTimeExpenses: [amount]
-      });
-      propertyMonthlyFigures.push(newMonth);
-    }
+    const monthId: MonthId = extractMonthId(paymentDate);
+    const monthlyFigures: PropertyMonthlyFigures = findPropertyFigures(propertyMonthlyFigures, monthId);
+    
+    attachAmount(monthId, monthlyFigures, "oneTimeExpense", false, amount);
   })
 }
 
 function attachMonthlyExpenses(propertyMonthlyFigures: PropertyMonthlyFigures[], monthly_expenses: MonthlyExpenseDTO[]) {
-  monthly_expenses.forEach(({ startDate, duration, amount }) => {
-    const { year, month } = extractDateParts(startDate);
-
-    /*
-      in contrast to one_time_expense, monthly_expense describes a payment to be made every month
-      hence, can result in attaching a single payment amount to many months (monthly figures)
-
-      determine all months to add a payment to
-      a month is uniquely identified by it's year & month
-    */
-    const monthIds: MonthId[] = generateMonthIds(startDate, duration);
-
-    monthIds.forEach(monthId => {
-      // find it's repsective figures
-      const monthPaymentDue: PropertyMonthlyFigures = findPropertyFigures(propertyMonthlyFigures, monthId.year, monthId.month);
-
-      // attach the monthly payment amount
-      if (monthPaymentDue) {
-        // accumulate expenses in correct month, alongside income data for easy access per month
-        monthPaymentDue.monthlyExpenses.push(amount);
-      }
-      else {
-        // in case expense is due when there is no income data, and no previously created month, it's initialized here
-        const newMonth: PropertyMonthlyFigures = createMonthlyFigures({
-          year,
-          month,
-          monthlyExpenses: [amount]
-        });
-
-        propertyMonthlyFigures.push(newMonth);
-      }
-    });
-  })
+  monthly_expenses.forEach(expense => {
+    const monthId: MonthId = extractMonthId(expense.startDate);
+    
+    attachSingleMonthlyExpense(
+      propertyMonthlyFigures,
+      monthId,
+      "monthlyExpenses",
+      true,
+      expense.duration,
+      expense.amount
+    )
+  });
 }
 
-interface MonthId {
-  year: number;
-  month: number;
-}
+function attachMortgageExpense(propertyMonthlyFigures: PropertyMonthlyFigures[], mortgage_expense: MortgageExpenseDTO) {
+  const { type: loanType } = mortgage_expense;
 
-function generateMonthIds(startDate: PgDate, duration: number): MonthId[] {
-  const monthIds: MonthId[] = [];
-  
-  const {year, month} = extractDateParts(startDate);
-  let currMonth = month;
-  let currYear = year;
+  switch (loanType) {
+    case SPITZER_LOAN:
+      attachSpitzerLoanExpense(propertyMonthlyFigures, <SpitzerLoanDTO>mortgage_expense);
+      break;
 
-  for (let i = 0; i < duration; i++) {
-    // push first month without modification
-    if (i === 0) {
-      monthIds.push({year: currYear, month: currMonth});
-      continue
-    }
+    case NORMAL_LOAN:
+      attachNormalLoanExpense(propertyMonthlyFigures, <NormalLoanDTO>mortgage_expense);
+      break;
 
-    else {
-      // increment the following months. if you've reach 12 (Dec), go to Jan next year
-      if (currMonth === 12) {
-        currMonth = 1;
-        currYear++;
-      }
-      else {
-        currMonth++;
-      }
-    }
-
-    monthIds.push({year: currYear, month: currMonth});
+    default:
+      throw new Error(`invalid loan type: ${loanType}`);
   }
+}
 
-  return monthIds;
+function attachSpitzerLoanExpense(propertyMonthlyFigures: PropertyMonthlyFigures[], mortgage_expense: SpitzerLoanDTO) {
+  const { startDate, loanAmount, duration, loanRate } = mortgage_expense;
+
+  const monthId: MonthId = extractMonthId(startDate);
+  const monthlyPayment = loanAmount * loanRate;
+
+  attachSingleMonthlyExpense(
+    propertyMonthlyFigures,
+    monthId,
+    "mortgageExpense",
+    false,
+    duration,
+    monthlyPayment)
+  ;
+}
+
+function attachNormalLoanExpense(propertyMonthlyFigures: PropertyMonthlyFigures[], mortgage_expense: NormalLoanDTO) {
+  const { startDate, paymentPeriods } = mortgage_expense;
+
+  const initialMonth: MonthId = extractMonthId(startDate);
+  let periodStartMonth: MonthId = initialMonth;
+
+  paymentPeriods.forEach(({ duration, amount }) => {
+    // decimal digits irrelevant for chart display
+    const monthlyPayment = Math.trunc(amount / duration);
+    
+    const lastModifiedMonth: MonthId = attachSingleMonthlyExpense(
+      propertyMonthlyFigures,
+      periodStartMonth,
+      "mortgageExpense",
+      false,
+      duration,
+      monthlyPayment
+    );
+
+    periodStartMonth = incrementMonth(lastModifiedMonth.year, lastModifiedMonth.month);
+  })
+
+}
+
+function attachSingleMonthlyExpense(
+  propertyMonthlyFigures: PropertyMonthlyFigures[],
+  monthId: MonthId,
+  expenseField: "monthlyExpenses" | "mortgageExpense",
+  isFieldArray: boolean,
+  duration: number,
+  amount: number
+): MonthId {
+  /*
+    in contrast to a one time expense, a monthly expense affects many months of a single property
+    a month is uniquely identified by it's year & month
+  */
+
+  const monthIds: MonthId[] = generateMonthIds(monthId, duration);
+
+  monthIds.forEach(monthId => {
+    const monthlyFigures: PropertyMonthlyFigures = findPropertyFigures(propertyMonthlyFigures, monthId);
+    attachAmount(monthId, monthlyFigures, expenseField, isFieldArray, amount);
+  })
+
+  const lastMonth: MonthId = monthIds[monthIds.length - 1];
+  return lastMonth;
+}
+
+function attachAmount(monthId, monthlyFigures, expenseField, isFieldArray, amount) {
+      /*
+        if monthly figures doesn't exist - create one
+        could happen when there is only expenses for this month, no income
+      */
+      if (!monthlyFigures) {
+        const newMonth: PropertyMonthlyFigures = createMonthlyFigures({
+          year: monthId.year,
+          month: monthId.month,
+          [expenseField]: isFieldArray ? [amount] : amount
+        });
+  
+        monthlyFigures.push(newMonth);
+        return;
+      }
+  
+      // else, simply attach amount
+      if (isFieldArray) {
+        monthlyFigures[expenseField].push(amount);
+      }
+      else {
+        monthlyFigures[expenseField] = amount;
+      }
 }
