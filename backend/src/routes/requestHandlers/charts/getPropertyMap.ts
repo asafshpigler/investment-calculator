@@ -69,16 +69,14 @@ function mapExpenses(map: PropertyMap, expenses: PropertyExpensesDBO[]) {
 function attachOneTimeExpenses(propertyMonthlyFigures: PropertyMonthlyFigures[], one_time_expenses: OneTimeExpenseDTO[]) {
   one_time_expenses.forEach(({ paymentDate, amount }) => {
     const monthId: MonthId = extractMonthId(paymentDate);
-    const monthlyFigures: PropertyMonthlyFigures = findPropertyFigures(propertyMonthlyFigures, monthId);
-    
-    attachAmount(monthId, monthlyFigures, "oneTimeExpense", false, amount);
+    attachAmount(monthId, propertyMonthlyFigures, "oneTimeExpenses", true, amount);
   })
 }
 
 function attachMonthlyExpenses(propertyMonthlyFigures: PropertyMonthlyFigures[], monthly_expenses: MonthlyExpenseDTO[]) {
   monthly_expenses.forEach(expense => {
     const monthId: MonthId = extractMonthId(expense.startDate);
-    
+
     attachSingleMonthlyExpense(
       propertyMonthlyFigures,
       monthId,
@@ -120,7 +118,7 @@ function attachSpitzerLoanExpense(propertyMonthlyFigures: PropertyMonthlyFigures
     false,
     duration,
     monthlyPayment)
-  ;
+    ;
 }
 
 function attachNormalLoanExpense(propertyMonthlyFigures: PropertyMonthlyFigures[], mortgage_expense: NormalLoanDTO) {
@@ -132,7 +130,7 @@ function attachNormalLoanExpense(propertyMonthlyFigures: PropertyMonthlyFigures[
   paymentPeriods.forEach(({ duration, amount }) => {
     // decimal digits irrelevant for chart display
     const monthlyPayment = Math.trunc(amount / duration);
-    
+
     const lastModifiedMonth: MonthId = attachSingleMonthlyExpense(
       propertyMonthlyFigures,
       periodStartMonth,
@@ -150,7 +148,7 @@ function attachNormalLoanExpense(propertyMonthlyFigures: PropertyMonthlyFigures[
 function attachSingleMonthlyExpense(
   propertyMonthlyFigures: PropertyMonthlyFigures[],
   monthId: MonthId,
-  expenseField: "monthlyExpenses" | "mortgageExpense",
+  expenseField: ExpenseField,
   isFieldArray: boolean,
   duration: number,
   amount: number
@@ -163,35 +161,51 @@ function attachSingleMonthlyExpense(
   const monthIds: MonthId[] = generateMonthIds(monthId, duration);
 
   monthIds.forEach(monthId => {
-    const monthlyFigures: PropertyMonthlyFigures = findPropertyFigures(propertyMonthlyFigures, monthId);
-    attachAmount(monthId, monthlyFigures, expenseField, isFieldArray, amount);
+    attachAmount(monthId, propertyMonthlyFigures, expenseField, isFieldArray, amount);
   })
 
   const lastMonth: MonthId = monthIds[monthIds.length - 1];
   return lastMonth;
 }
 
-function attachAmount(monthId, monthlyFigures, expenseField, isFieldArray, amount) {
-      /*
-        if monthly figures doesn't exist - create one
-        could happen when there is only expenses for this month, no income
-      */
-      if (!monthlyFigures) {
-        const newMonth: PropertyMonthlyFigures = createMonthlyFigures({
-          year: monthId.year,
-          month: monthId.month,
-          [expenseField]: isFieldArray ? [amount] : amount
-        });
-  
-        monthlyFigures.push(newMonth);
-        return;
-      }
-  
-      // else, simply attach amount
-      if (isFieldArray) {
-        monthlyFigures[expenseField].push(amount);
-      }
-      else {
-        monthlyFigures[expenseField] = amount;
-      }
+function attachAmount(
+  monthId: MonthId,
+  monthlyFigures: PropertyMonthlyFigures[],
+  expenseField: ExpenseField,
+  isFieldArray: boolean,
+  amount: number
+) {
+  /*
+    if monthly figures doesn't exist - create one
+    could happen when there is only expenses for this month, no income
+  */
+
+  // is monthly figures a singular entity or nah?
+  // if I want to push a new monthly figures where do i push it to
+  // and howcome they both have the same name
+
+  const targetMonth: PropertyMonthlyFigures = findPropertyFigures(monthlyFigures, monthId);
+
+  if (!targetMonth) {
+    const newMonth: PropertyMonthlyFigures = createMonthlyFigures({
+      year: monthId.year,
+      month: monthId.month,
+      [expenseField]: isFieldArray ? [amount] : amount
+    });
+
+    monthlyFigures.push(newMonth);
+    return;
+  }
+
+  // else, simply attach amount
+  if (isFieldArray) {
+    const arrayField = <number[]>targetMonth[expenseField]
+    arrayField.push(amount);
+  }
+  else {
+    // @ts-ignore
+    targetMonth[expenseField] = amount;
+  }
 }
+
+type ExpenseField = "oneTimeExpenses" | "mortgageExpense" | "monthlyExpenses"
