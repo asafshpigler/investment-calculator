@@ -6,8 +6,6 @@ export interface PropertyMonthlyFigures {
   occupancyRate: number;
   nightlyPrice: number;
   oneTimeExpenses: number[];
+  monthlyExpenses: number[];
+  mortgageExpense: number;
 }
-
-  // propertyId: number;
-  // monthlyExpenses: number[];
-  // mortgageExpenses: number[];

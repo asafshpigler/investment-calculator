@@ -4,7 +4,7 @@ import { ChartDTO } from "../../../data-transfer-models";
 import { sum } from "./helpers";
 import { PropertyMonthlyFigures } from "./charts";
 
-// prepare data for chart display
+// prepare data for chart display, for a single property
 export function transformToChartFormat(propertyId: number, propertyMonthlyFigures: PropertyMonthlyFigures[]): ChartDTO {
   // sort months in chronological order
   propertyMonthlyFigures.sort((a, b) => {
@@ -19,21 +19,23 @@ export function transformToChartFormat(propertyId: number, propertyMonthlyFigure
   // transform data
   const labels = [];
   const incomes = [];
-  const oneTimeExpensesForChart = [];
+  const oneTimeExpenses = [];
+  const monthlyExpenses = [];
   const netRevenues = [];
 
+  // for each month of a property, push data for incomes, expenses, net revenue
   propertyMonthlyFigures.forEach(pm => {
-    const {year, month, occupancyRate, nightlyPrice, oneTimeExpenses} = pm;
-
-    const label: string = moment({ year, month: month - 1 }).format("MMM YY");
-    const numOfDays: number = daysInMonth(year, month);
-    const income: number = Math.trunc(numOfDays * occupancyRate * nightlyPrice);
-    const oneTimeSum: number = sum(oneTimeExpenses);
-    const netRevenue: number = income - oneTimeSum;
+    const label: string = moment({ year: pm.year, month: pm.month - 1 }).format("MMM YY");
+    const numOfDays: number = daysInMonth(pm.year, pm.month);
+    const income: number = Math.trunc(numOfDays * pm.occupancyRate * pm.nightlyPrice);
+    const oneTimeSum: number = sum(pm.oneTimeExpenses);
+    const monthlySum: number = sum(pm.monthlyExpenses);
+    const netRevenue: number = income - oneTimeSum - monthlySum;
     
     labels.push(label);
     incomes.push(income);
-    oneTimeExpensesForChart.push(-oneTimeSum); // note: turned to negative number
+    oneTimeExpenses.push(-oneTimeSum); // note: turned to negative number
+    monthlyExpenses.push(-monthlySum); // note: turned to negative number
     netRevenues.push(netRevenue);
   })
 
@@ -42,8 +44,8 @@ export function transformToChartFormat(propertyId: number, propertyMonthlyFigure
     labels,
     incomes,
     netRevenues,
-    monthlyExpenses: null,
-    oneTimeExpenses: oneTimeExpensesForChart,
+    oneTimeExpenses: oneTimeExpenses,
+    monthlyExpenses: monthlyExpenses,
     mortgageExpenses: null,
   }
 

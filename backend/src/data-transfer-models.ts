@@ -31,19 +31,23 @@ export interface MonthlyExpenseDTO {
 export type MortgageExpenseDTO = NormalLoanDTO | SpitzerLoanDTO
 
 interface NormalLoanDTO {
+  type: 'normal'
   startDate: PgDate;
-  amount: number;
+  loanAmount: number;
+  
   paymentPeriods: PaymentPeriodDBO[]
 }
 
 interface PaymentPeriodDBO {
   duration: number;
-  loanRate: number;
+  amount: number;
 }
 
 interface SpitzerLoanDTO {
+  type: 'spitzer'
   startDate: PgDate;
-  amount: number;
+  loanAmount: number;
+
   duration :number;
   loanRate: number;
 }

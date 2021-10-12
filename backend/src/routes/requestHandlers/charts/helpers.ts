@@ -28,3 +28,17 @@ export function sum(nums): number {
 export function daysInMonth (year, month): number {
   return new Date(year, month, 0).getDate();
 }
+
+export function createMonthlyFigures(monthlyFigures: Partial<PropertyMonthlyFigures>): PropertyMonthlyFigures  {
+  const {year, month, nightlyPrice, occupancyRate, oneTimeExpenses, monthlyExpenses, mortgageExpense} = monthlyFigures || {};
+
+  return {
+    year: year || null,
+    month: month || null,
+    nightlyPrice: nightlyPrice ||null,
+    occupancyRate: occupancyRate || null,
+    oneTimeExpenses: oneTimeExpenses || [],
+    monthlyExpenses: monthlyExpenses || [],
+    mortgageExpense: mortgageExpense || null,
+  }
+}
