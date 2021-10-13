@@ -81,9 +81,7 @@ function ExpensesCard() {
           <DatePicker
             // label="Loan Start Date"
             // value={value}
-            // onChange={(newValue) => {
-            //   setValue(newValue);
-            // }}
+            onChange={(newValue) => {}}
             renderInput={(params) => <TextField {...params} />}
           />
         </LocalizationProvider>
@@ -102,7 +100,7 @@ function ExpensesCard() {
           // id="outlined-adornment-amount"
           type="number"
           // value={values.amount}
-          // onChange={handleChange('amount')}
+          onChange={(newValue) => {}}
           startAdornment={<InputAdornment position="start">$</InputAdornment>}
         // label="Amount"
         />

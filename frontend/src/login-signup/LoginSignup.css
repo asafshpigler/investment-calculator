@@ -1,6 +1,4 @@
 .login-signup {
-  height: 100%;
-
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -24,4 +22,16 @@
 .btn-container {
   display: flex;
   justify-content: space-between;
+}
+
+.error-container {
+  transform: translateY(25px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.error-msg {
+  margin-right: 8px;
+  font-weight: bold;
 }

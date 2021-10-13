@@ -1,15 +1,15 @@
 
-import React, { useContext } from 'react';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import Paper from '@mui/material/Paper';
 import ChartCard from './chart-card/ChartCard';
-import './Main.css';
 import ExpensesForm from './expenses-card/ExpensesCard';
-import Context from 'context';
-
+import { selectCurrentChart } from 'store/charts';
+import './Main.css';
 
 function Main() {
-  const context = useContext(Context);
-  const { avgAnnualIncome, avgAnnualExpense, avgAnnualProfit } = context && context.charts;
+  const currentChart = useSelector(selectCurrentChart);
+  const { avgAnnualIncome, avgAnnualExpense, avgAnnualProfit } = currentChart;
   
   const propertyNumbers = [
     {

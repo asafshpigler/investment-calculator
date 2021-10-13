@@ -1,4 +1,3 @@
-import { ADMIN_USER_ID } from "..";
 import { ChartDTO } from "../../../data-transfer-models";
 import { getAllPropertyPeriods } from "../../../db/paymentPeriod";
 import { getPropertyExpenses } from "../../../db/propertyExpenses";
@@ -11,7 +10,7 @@ import { PropertyMap } from "./charts";
 export async function handleGetCharts(req, res, next) {
   console.log('handleGetCharts');
 
-  const userId = ADMIN_USER_ID || req.params.userId
+  const {id: userId} = req.session.user || {};
 
   try {
     // query: get property incomes & expenses

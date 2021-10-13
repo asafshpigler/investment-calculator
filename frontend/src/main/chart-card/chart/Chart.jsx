@@ -1,13 +1,14 @@
 
 
-import React, { useContext } from 'react';
+import React from 'react';
 import { Bar } from 'react-chartjs-2';
-import Context from 'context';
+import { useSelector } from 'react-redux';
+import { selectCurrentChart } from 'store/charts';
 
 const MultiType = () => {
-  const context = useContext(Context);
+  const currentChart = useSelector(selectCurrentChart);
 
-  const { labels, incomes, oneTimeExpenses, netRevenues, monthlyExpenses, mortgageExpenses } = context && context.charts;
+  const { labels, incomes, oneTimeExpenses, netRevenues, monthlyExpenses, mortgageExpenses } = currentChart;
 
   const data = {
     labels,

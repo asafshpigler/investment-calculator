@@ -3,12 +3,14 @@ import {
   handleLoginRequest,
   handleGetCharts,
   handleGetPropertyExpenses,
-  handleUpdatePropertyExpenses
+  handleUpdatePropertyExpenses,
+  handleLogoutRequest,
 } from './requestHandlers';
 
 function attachRoutes(app) {
   app.post('/signup', handleSignupRequest);
-  app.get('/login', handleLoginRequest);
+  app.post('/login', handleLoginRequest);
+  app.post('/logout', handleLogoutRequest);
   
   app.get('/charts', handleGetCharts);
 

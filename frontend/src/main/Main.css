@@ -1,3 +1,8 @@
+.main {
+  padding: 20px;
+  box-sizing: border-box
+}
+
 .chart-and-numbers-container {
   display: flex;
   margin-bottom: 24px;

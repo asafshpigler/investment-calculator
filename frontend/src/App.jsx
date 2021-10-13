@@ -1,27 +1,33 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
+
+import Header from 'header/Header';
 import LoginSignup from './login-signup/LoginSignup';
 import Main from './main/Main';
-import Context from './context';
-import _get from 'lodash/get';
-
-import { getCharts } from './services/api';
-
-const isLoggedIn = true;
+import { selectSession } from 'store/session';
 
 function App() {
-  const [charts, setCharts] = useState({});
-  const [expenses, setExpenses] = useState({});
-  
-  useEffect(() => {
-    getCharts().then(chart => {
-      setCharts(chart);
-    });
-  }, [])
+  const isUserLoggedIn = useSelector(selectSession);
+
+  function renderMainIfLoggedIn() {
+    return isUserLoggedIn === true ? <Main /> : <Redirect to='/login' />
+  }
 
   return (
-    <Context.Provider value={{charts}}>
-      {isLoggedIn ? <Main /> : <LoginSignup />}
-    </Context.Provider>
+    <Router>
+      <Header />
+
+      <Switch>
+        <Route path="/login"><LoginSignup /></Route>
+        <Route path="/" render={renderMainIfLoggedIn}></Route>
+      </Switch>
+    </Router>
   );
 }
 
