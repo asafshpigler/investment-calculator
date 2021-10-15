@@ -1,0 +1,25 @@
+{
+  "name": "investment-calculator",
+  "version": "1.0.0",
+  "description": "SETUP",
+  "scripts": {
+    "start": "node backend/dist/server.js",
+    "build": "(cd frontend && npm i && npm run build) && (cd backend && npm i && npm run build)",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asafshpigler/investment-calculator.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/asafshpigler/investment-calculator/issues"
+  },
+  "homepage": "https://github.com/asafshpigler/investment-calculator#readme",
+
+  "engines": {
+    "node": "14.x",
+    "npm": "6.x"
+  }
+}
