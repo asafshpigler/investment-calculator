@@ -23,7 +23,7 @@ exports.loadPropertyIncomeData = void 0;
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 const csv = __importStar(require("fast-csv"));
-const connection_1 = require("../connection");
+const db = __importStar(require(".."));
 const FILE_PATH = path.resolve(__dirname, 'property_data.csv');
 /*
   parsing & inserting rows one at a time
@@ -50,7 +50,7 @@ function loadPropertyIncomeData() {
             console.log(dbRow);
             const query = `INSERT INTO property_period (property_id, year, month, nightly_price, occupancy_rate)
             VALUES (${dbRow.property_id}, ${dbRow.year}, ${dbRow.month}, ${dbRow.nightly_price}, ${dbRow.occupancy_rate})`;
-            const prm = connection_1.client.query(query);
+            const prm = db.client.query(query);
             queryPrms.push(prm);
         })
             .on('end', (rowCount) => {

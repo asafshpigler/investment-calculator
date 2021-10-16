@@ -15,3 +15,7 @@ export function login(userName) {
 export function logout() {
   return axios.post('/logout');
 }
+
+export function updateExpenses(expenses) {
+  return axios.post('/property-expenses', expenses).then(res => res.data);
+}

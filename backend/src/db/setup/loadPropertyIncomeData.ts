@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as csv from 'fast-csv';
-import { client } from '../connection';
+import * as db from '..';
 import { PropertyPeriodDBO } from '../models/PropertyPeriod';
 import { QueryResult } from 'pg';
 
@@ -47,7 +47,7 @@ export function loadPropertyIncomeData(): Promise<void> {
             `INSERT INTO property_period (property_id, year, month, nightly_price, occupancy_rate)
             VALUES (${dbRow.property_id}, ${dbRow.year}, ${dbRow.month}, ${dbRow.nightly_price}, ${dbRow.occupancy_rate})`;
     
-          const prm: Promise<QueryResult<any>> = client.query(query);
+          const prm: Promise<QueryResult<any>> = db.client.query(query);
           queryPrms.push(prm);
         })
 

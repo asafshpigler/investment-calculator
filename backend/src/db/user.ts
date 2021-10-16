@@ -1,10 +1,10 @@
 import { UserDBO } from './models/User';
-import { client } from './connection';
+import * as db from '.';
 
 const USER_TABLE = 'public.user';
 
 export async function getUser(userName: string): Promise<UserDBO> {
-  return await client
+  return await db.client
     .query(
       `SELECT * FROM ${USER_TABLE}
       WHERE name = '${userName}'`
@@ -13,7 +13,7 @@ export async function getUser(userName: string): Promise<UserDBO> {
 }
 
 export async function insertUser(userName: string): Promise<UserDBO> {
-  return await client
+  return await db.client
     .query(
       `INSERT INTO ${USER_TABLE}(name)
       VALUES('${userName}')

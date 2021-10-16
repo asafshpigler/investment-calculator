@@ -1,11 +1,13 @@
-import { getUser, insertUser } from "../../db/user";
 import { UserDBO } from "../../db/models/User";
+import * as db from "../../db";
 
 export async function handleSignupRequest(req, res, next) {
-  const { userName } = req.body;
+  console.log('handleSignupRequest');
 
   try {
-    const user: UserDBO = await signUp(userName);
+    validateSignupInput(req);
+
+    const user: UserDBO = await signUp(req.body.userName);
     req.session.user = user;
     
     res.json(user);
@@ -14,46 +16,36 @@ export async function handleSignupRequest(req, res, next) {
   }
 }
 
+function validateSignupInput(req) {
+  if (!req.body.userName) {
+    throw new Error('invalid signup input');
+  }
+}
+
 // TODO: this should respond in user, and charts, and avg numbers, and expenses
 
 // TODO NOW: for now, just respond with the user itself, (which is saved on session, not just user id)
 //    in case it already exists, before querying to SQL
 export async function handleLoginRequest(req, res, next) {
-  const {userName} = req.body;
-  const {user: sessionUser} = req.session;
-
-  // this handler is used for the cases right now, might be split later. handle and throw errors to make sense in your mind. might be removed later
-  // INPUT VALIDATION
-  if (userName && sessionUser) {
-    console.warn('redundant user information, we already have a session');
-    res.end()
-    return;
-  }
-  if (!userName && !sessionUser) {
-    console.warn('initial login attempt, using site cookie. though there is no session user, so it failed');
-    res.end()
-    return;
-    // throw new Error('have not sent user name. it is crucial to enable authentication, that has not happened yet based on lack of req.session.user inii')
-  }
-
+  console.log('handleLoginRequest');
+  
   try {
-    console.log('attempting login', {userName, session: req.session});
+    validateLoginInput(req);
+    
+    const {userName} = req.body;
+    const {user: sessionUser} = req.session;
+
     let user: UserDBO = null;
 
-    // when user name is sent, and we don't have a session user yet, we'll attempt login
+    // user login
     if (userName) {
-      console.log('userName was sent');
-
       const userFromDB = await login(userName);
-      console.log('after login');
 
-      // after successful login, save user info in the session, it'll be used for other queries to DB
       user = userFromDB;
       req.session.user = userFromDB;
     }
 
-    
-    // otherwise, session user should exist, simply return it
+    // application login, resume usage of website
     else {
       user = sessionUser;
     }
@@ -64,8 +56,16 @@ export async function handleLoginRequest(req, res, next) {
   }
 }
 
+function validateLoginInput(req) {
+  if (!req.body.userName && !req.session.user) {
+    throw new Error('invalid login input');
+  }
+}
+
 export function handleLogoutRequest(req, res, next) {
-  req.session.destroy(function (err) {
+  console.log('handleLogoutRequest');
+  
+  req.session.destroy(function () {
     res.end();
   });
 }
@@ -73,18 +73,19 @@ export function handleLogoutRequest(req, res, next) {
 // REMOVE ON POLISH: actual logic
 
 async function signUp(userName: string): Promise<UserDBO> {
-  const isUserExists: boolean = !!await getUser(userName);
+  const isUserExists: boolean = !!await db.getUser(userName);
 
   if (isUserExists) {
     throw new Error('User already exists');
   }
 
-  const newUser: UserDBO = await insertUser(userName);
+  const newUser: UserDBO = await db.insertUser(userName);
+  
   return newUser;
 }
 
 async function login(userName: string): Promise<UserDBO> {
-  const user: UserDBO = await getUser(userName);
+  const user: UserDBO = await db.getUser(userName);
   
   if (!user) {
     throw new Error('User doesn\'t exist')

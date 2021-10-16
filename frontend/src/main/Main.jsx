@@ -2,6 +2,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
 import ChartCard from './chart-card/ChartCard';
 import ExpensesForm from './expenses-card/ExpensesCard';
 import { selectCurrentChart } from 'store/charts';
@@ -37,8 +38,10 @@ function Main() {
         <div className="property-numbers-container">
           {propertyNumbers.map(data => (
             <Paper key={data.txt} className={`property-number ${data.className}`}>
-              {data.txt} <br />
-              <span className="number">{data.number}</span>
+              <Typography variant="h5">
+                {data.txt} <br />
+                <span className="number">{data.number}</span>
+              </Typography>
             </Paper>
           ))}
         </div>

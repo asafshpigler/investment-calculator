@@ -27,18 +27,19 @@ function transformToChartFormat(propertyId, propertyMonthlyFigures) {
     const netRevenues = [];
     // for each month of a property, push data for incomes, expenses, net revenue
     propertyMonthlyFigures.forEach(pm => {
+        const mortgageExpense = pm.mortgageExpense ? +(pm.mortgageExpense).toFixed(2) : pm.mortgageExpense;
         const label = (0, moment_1.default)({ year: pm.year, month: pm.month - 1 }).format("MMM YY");
         const numOfDays = (0, helpers_1.daysInMonth)(pm.year, pm.month);
         const income = Math.trunc(numOfDays * pm.occupancyRate * pm.nightlyPrice);
         const oneTimeSum = (0, helpers_2.sum)(pm.oneTimeExpenses);
         const monthlySum = (0, helpers_2.sum)(pm.monthlyExpenses);
-        const netRevenue = income - oneTimeSum - monthlySum - pm.mortgageExpense;
+        const netRevenue = income - oneTimeSum - monthlySum - mortgageExpense;
         // note: expenses are turned to negative numbers
         labels.push(label);
         incomes.push(income);
         oneTimeExpenses.push(-oneTimeSum);
         monthlyExpenses.push(-monthlySum);
-        mortgageExpenses.push(-pm.mortgageExpense);
+        mortgageExpenses.push(-mortgageExpense);
         netRevenues.push(netRevenue);
     });
     const amountOfMonths = propertyMonthlyFigures.length;

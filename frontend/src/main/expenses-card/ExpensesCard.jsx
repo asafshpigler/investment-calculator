@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import moment from 'moment';
 
 import { v4 as uuidv4 } from 'uuid';
 import Card from "@mui/material/Card";
@@ -15,10 +16,10 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
 import Button from "@mui/material/Button";
 import SendIcon from '@mui/icons-material/Send';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 import { preventPageRefresh } from "../../helpers";
 import './ExpensesCard.css';
+import { updateExpenses } from "api-state-logic";
 
 const LOAN_TYPES = {
   NORMAL: 'NORMAL',
@@ -41,21 +42,48 @@ const DEFAULT_PAYMENT_PERIODS = [
 
 function ExpensesCard() {
   const [loanType, setLoanType] = useState(LOAN_TYPES.SPITZER);
-  // const [startDate, setStartDate] = useState();
-  // const [amount, setAmount] = useState(0);
+  const [startDate, setStartDate] = useState(moment());
+  const [amount, setAmount] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [loanRate, setLoanRate] = useState(1.5);
 
   // normal loan state
-  const [paymentPeriods, setPaymentPeriods] = useState(DEFAULT_PAYMENT_PERIODS);
+  // const [paymentPeriods, setPaymentPeriods] = useState(DEFAULT_PAYMENT_PERIODS);
 
   // spitzer loan state
   // const [monthsDuration, setMonthsDuration] = useState(48);
   // const [interestRate, setInterestRate] = useState(0.5);
 
+  async function handleOnSubmit(event) {
+    preventPageRefresh(event);
+
+    await updateExpenses({loanType, startDate, amount, duration, loanRate});
+    console.log('expenses updated');
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function handleOnChangeDate(dateMomentFormat) {
+    setStartDate(dateMomentFormat);
+  }
+
+  function handleOnChangeAmount(event) {
+    setAmount(+event.target.value);
+  }
+
+  function handleOnChangeDuration(event) {
+    setDuration(+event.target.value);
+  }
+
+  function handleOnChangeLoanRate(event) {
+    setLoanRate(event.target.value);
+  }
+
   function handleLoanTypeChange(event) {
     setLoanType(event.target.value);
   }
 
-  function renderLoanType() {
+  function renderLoanTypeSelect() {
     return (
       <div className="input-container">
         <Typography variant="h6" className="input-label">
@@ -79,9 +107,10 @@ function ExpensesCard() {
 
         <LocalizationProvider dateAdapter={AdapterDateMoment}>
           <DatePicker
-            // label="Loan Start Date"
-            // value={value}
-            onChange={(newValue) => {}}
+            label="Loan Start Date"
+            value={startDate}
+            onChange={handleOnChangeDate}
+            inputFormat="DD/MM/YYYY"
             renderInput={(params) => <TextField {...params} />}
           />
         </LocalizationProvider>
@@ -97,12 +126,10 @@ function ExpensesCard() {
         </Typography>
 
         <OutlinedInput
-          // id="outlined-adornment-amount"
           type="number"
-          // value={values.amount}
-          onChange={(newValue) => {}}
+          value={amount}
+          onChange={handleOnChangeAmount}
           startAdornment={<InputAdornment position="start">$</InputAdornment>}
-        // label="Amount"
         />
       </div>
     )
@@ -111,14 +138,14 @@ function ExpensesCard() {
   function renderCustomInputs() {
     switch (loanType) {
       case LOAN_TYPES.NORMAL:
-        return renderNormalLoanInputs();
+        // return renderNormalLoanInputs();
       case LOAN_TYPES.SPITZER:
         return renderSpitzerLoanInputs();
       default:
         throw new Error('unexpected loan type, invalid value');
     }
   }
-
+/* 
   function addPaymentPeriod() {
     setPaymentPeriods([...paymentPeriods, { duration: 3, loanRate: 1.5 }])
   }
@@ -136,7 +163,7 @@ function ExpensesCard() {
         <Button onClick={addPaymentPeriod} variant="contained" endIcon={<AddCircleIcon />}>Add Payment Period</Button>
       </>
     )
-  }
+  } */
 
   function renderSpitzerLoanInputs() {
     return (
@@ -156,10 +183,8 @@ function ExpensesCard() {
 
         <OutlinedInput
           type="number"
-        // id="outlined-adornment-amount"
-        // value={values.amount}
-        // onChange={handleChange('amount')}
-        // label="Amount"
+          value={duration}
+          onChange={handleOnChangeDuration}
         />
 
       </div>
@@ -175,7 +200,8 @@ function ExpensesCard() {
 
         <Slider
           className="loan-rate-slider"
-          defaultValue={1.5}
+          value={loanRate}
+          onChange={handleOnChangeLoanRate}
           step={0.1}
           min={0}
           max={5}
@@ -192,9 +218,9 @@ function ExpensesCard() {
         Expenses
       </Typography>
 
-      <form onSubmit={preventPageRefresh}>
+      <form onSubmit={handleOnSubmit}>
         {/* shared inputs across loan types */}
-        {renderLoanType()}
+        {renderLoanTypeSelect()}
         {renderDatePicker()}
         {renderAmount()}
 

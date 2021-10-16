@@ -1,10 +1,13 @@
+import moment from 'moment';
+import * as api from 'api';
 import store from './store';
 import { setCharts, setCurrentChart, setPropertyIds } from 'store/charts';
-import * as api from 'api';
 import { setUserLoggedIn } from 'store/session';
 
 // login used by the application, to resume an existing session, if exists
 export async function appLogin() {
+  console.log('appLogin');
+
   const user = await api.login();
 
   if (user) {
@@ -37,6 +40,8 @@ export async function logout() {
 }
 
 async function getUserData() {
+  console.log('getUserData');
+  
   const charts = await api.getCharts();
   
   store.dispatch(setCharts(charts));
@@ -50,4 +55,28 @@ export function setChartByPropertyId(propertyId) {
   const currentChart = charts.find(c => c.propertyId === propertyId);
 
   store.dispatch(setCurrentChart(currentChart));
+}
+
+export async function updateExpenses(mortgageExpenses) {
+  const {loanType, startDate, amount, duration, loanRate} = mortgageExpenses;
+
+  const propertyExpenses = {
+    propertyId: store.getState().charts.value.currentChart.propertyId,
+    oneTimeExpenses: [],
+    monthlyExpenses: [],
+
+    mortgageExpenses: {
+      type: loanType,
+      startDate: moment(startDate).format('YYYY-MM-DD'),
+      loanAmount: amount,
+      duration,
+      loanRate: loanRate / 100
+    }
+  }
+
+  const chart = await api.updateExpenses(propertyExpenses);
+
+  console.log({chart});
+
+  store.dispatch(setCurrentChart(chart));
 }

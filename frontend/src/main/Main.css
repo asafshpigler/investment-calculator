@@ -1,16 +1,17 @@
 .main {
-  padding: 20px;
+  padding: 50px 20px 0;
   box-sizing: border-box
 }
 
 .chart-and-numbers-container {
   display: flex;
+  justify-content: space-around;
   margin-bottom: 24px;
 }
 
 .chart-and-numbers-container .chart-card {
   flex-grow: 1;
-  margin-right: 24px;
+  max-width: 70%;
 }
 
 .property-numbers-container {
@@ -24,7 +25,7 @@
   text-align: center;
 }
 
-.property-number > .number {
+.property-number .number {
   font-weight: bold;
 }
 
