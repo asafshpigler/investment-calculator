@@ -1,6 +1,6 @@
 import { Client } from 'pg';
 
-export const client = new Client({ connectionString: process.env.DATABASE_URL });
+export const client = new Client({ connectionString: process.env.DB_URI });
 
 export async function connect(): Promise<void> {
   return client.connect();
