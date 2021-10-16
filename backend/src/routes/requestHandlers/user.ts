@@ -25,11 +25,14 @@ export async function handleLoginRequest(req, res, next) {
   // this handler is used for the cases right now, might be split later. handle and throw errors to make sense in your mind. might be removed later
   // INPUT VALIDATION
   if (userName && sessionUser) {
-    throw new Error('redundant user information, we already have a session')
+    console.warn('redundant user information, we already have a session');
+    res.end()
+    return;
   }
   if (!userName && !sessionUser) {
-    console.log('initial login attempt, using site cookie. though there is no session user, so it failed');
+    console.warn('initial login attempt, using site cookie. though there is no session user, so it failed');
     res.end()
+    return;
     // throw new Error('have not sent user name. it is crucial to enable authentication, that has not happened yet based on lack of req.session.user inii')
   }
 
@@ -39,12 +42,16 @@ export async function handleLoginRequest(req, res, next) {
 
     // when user name is sent, and we don't have a session user yet, we'll attempt login
     if (userName) {
+      console.log('userName was sent');
+
       const userFromDB = await login(userName);
+      console.log('after login');
 
       // after successful login, save user info in the session, it'll be used for other queries to DB
       user = userFromDB;
       req.session.user = userFromDB;
     }
+
     
     // otherwise, session user should exist, simply return it
     else {

@@ -4,7 +4,7 @@
   "description": "SETUP",
   "scripts": {
     "start": "node backend/dist/server.js",
-    "build": "(cd frontend && npm i && npm run build) && (cd backend && npm i && npm run build)",
+    "build": "(cd frontend && npm i && npm run build) && (cd backend && npm i && npm run build && npm run setup-db)",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

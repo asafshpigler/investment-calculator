@@ -8,14 +8,16 @@
     "start": "node dist/server.js",
     "start-dev": "concurrently \"nodemon dist/server.js\" \"tsc -w\"",
     "build": "tsc && npm run copy-files",
-    "copy-files": "cp ./src/db/property_data.csv ./dist/db/property_data.csv",
-    "load-data": "npm run build && node ./dist/db/loadData.js"
+    "copy-files": "copyfiles -f ./src/db/setup/*.{sql,csv} ./dist/db/setup",
+    "setup-db": "node dist/db/setup/setup.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@types/node": "^16.10.3",
     "@types/pg": "^8.6.1",
+    "copyfiles": "^2.4.1",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
     "fast-csv": "^4.3.6",

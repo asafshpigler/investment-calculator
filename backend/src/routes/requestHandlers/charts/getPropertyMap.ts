@@ -2,10 +2,7 @@ import { PropertyExpensesDBO } from "../../../db/models/PropertyExpenses";
 import { PropertyPeriodDBO } from "../../../db/models/PropertyPeriod";
 import { createMonthlyFigures, extractMonthId, findPropertyFigures, generateMonthIds, incrementMonth } from "./helpers";
 import { MonthId, PropertyMap, PropertyMonthlyFigures } from "./charts";
-import { OneTimeExpenseDTO, MonthlyExpenseDTO, PgDate, MortgageExpenseDTO, SpitzerLoanDTO, NormalLoanDTO } from "../../../data-transfer-models";
-
-const SPITZER_LOAN = 'spitzer';
-const NORMAL_LOAN = 'normal';
+import { OneTimeExpenseDTO, MonthlyExpenseDTO, PgDate, MortgageExpenseDTO, SpitzerLoanDTO, NormalLoanDTO, SPITZER_LOAN, NORMAL_LOAN } from "../../../data-transfer-models";
 
 export function getPropertyMap(periods: PropertyPeriodDBO[], expenses: PropertyExpensesDBO[]): PropertyMap {
   const map: PropertyMap = new Map();

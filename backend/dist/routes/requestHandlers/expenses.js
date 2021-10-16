@@ -1,10 +1,6 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleUpdatePropertyExpenses = exports.handleGetPropertyExpenses = void 0;
-const moment_1 = __importDefault(require("moment"));
 const propertyExpenses_1 = require("../../db/propertyExpenses");
 async function handleGetPropertyExpenses(req, res, next) {
     console.log('handleGetPropertyExpenses');
@@ -25,31 +21,9 @@ async function handleGetPropertyExpenses(req, res, next) {
 exports.handleGetPropertyExpenses = handleGetPropertyExpenses;
 async function handleUpdatePropertyExpenses(req, res, next) {
     console.log('handleUpdatePropertyExpenses');
-    const userId = req.session && req.session.user.id;
-    const { propertyId, expenses } = req.body;
-    const { loanType, startDate, amount, duration, loanRate } = expenses;
-    /*
-      id: number;
-     userId: number;
-     propertyId: number;
-     oneTimeExpenses: OneTimeExpenseDTO[],
-     monthlyExpenses: MonthlyExpenseDTO[],
-     mortgageExpenses: MortgageExpenseDTO,
-     */
-    const propertyExpenses = {
-        id: null,
-        userId,
-        propertyId,
-        oneTimeExpenses: [],
-        monthlyExpenses: [],
-        mortgageExpenses: {
-            type: loanType,
-            startDate: (0, moment_1.default)(startDate).format('yyyy-mm-dd'),
-            loanAmount: amount,
-            duration,
-            loanRate
-        }
-    };
+    const propertyExpenses = req.body;
+    // TO REMOVE AFTER: handling user authentication, cookies
+    propertyExpenses.userId = req.session.user;
     try {
         await (0, propertyExpenses_1.upsertPropertyExpenses)(propertyExpenses);
         res.end();

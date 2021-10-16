@@ -1,14 +1,10 @@
 import { Client } from 'pg';
 
-// move to env file
-export const client = new Client({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'invest-calc',
-  password: '987321456',
-  port: 5432,
-})
+export const client = new Client({ connectionString: process.env.DATABASE_URL });
 
-export async function connect() {
-  await client.connect();
+export async function connect(): Promise<void> {
+  return client.connect();
+}
+export async function disconnect(): Promise<void> {
+  return client.end();
 }

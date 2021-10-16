@@ -29,14 +29,14 @@ export async function upsertPropertyExpenses(propertyExpenses: PropertyExpensesD
 async function updatePropertyExpenses(propertyExpenses: PropertyExpensesDTO): Promise<number> {
   console.log('updatePropertyExpenses');
 
-  const { userId, propertyId, oneTimeExpenses, monthlyExpenses, mortgageExpense } = propertyExpenses;
+  const { userId, propertyId, oneTimeExpenses, monthlyExpenses, mortgageExpenses } = propertyExpenses;
 
   return await client
     .query(
       `UPDATE ${PROPERTY_EXPENSES_TABLE}
       SET one_time_expenses = $3, monthly_expenses = $4, mortgage_expense = $5
       WHERE user_id = $1 AND property_id = $2`,
-      [userId, propertyId, oneTimeExpenses, monthlyExpenses, mortgageExpense]
+      [userId, propertyId, oneTimeExpenses, monthlyExpenses, mortgageExpenses]
     )
     .then(res => res.rowCount);
 }
@@ -44,14 +44,14 @@ async function updatePropertyExpenses(propertyExpenses: PropertyExpensesDTO): Pr
 async function insertPropertyExpenses(propertyExpenses: PropertyExpensesDTO): Promise<void> {
   console.log('insertPropertyExpenses');
 
-  const { userId, propertyId, oneTimeExpenses, monthlyExpenses, mortgageExpense } = propertyExpenses;
+  const { userId, propertyId, oneTimeExpenses, monthlyExpenses, mortgageExpenses } = propertyExpenses;
 
   await client
     .query(
       `INSERT INTO ${PROPERTY_EXPENSES_TABLE}
       (user_id, property_id, one_time_expenses, monthly_expenses, mortgage_expense)
       VALUES ($1, $2, $3, $4, $5)`,
-      [userId, propertyId, oneTimeExpenses, monthlyExpenses, mortgageExpense]
+      [userId, propertyId, oneTimeExpenses, monthlyExpenses, mortgageExpenses]
     )
     .then(res => {
       if (res.rowCount !== 1) {
