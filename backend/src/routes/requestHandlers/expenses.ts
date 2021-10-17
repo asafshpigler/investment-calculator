@@ -1,7 +1,8 @@
 import * as db from "../../db";
 import { PropertyExpensesDBO } from "../../db/models/PropertyExpenses";
-import { ChartDTO, MortgageExpenseDTO, NORMAL_LOAN, PropertyExpensesDTO, SpitzerLoanDTO, SPITZER_LOAN } from "../../data-transfer-models";
+import { ChartDTO, MortgageExpenseDTO, NormalLoanDTO, NORMAL_LOAN, PropertyExpensesDTO, SpitzerLoanDTO, SPITZER_LOAN } from "../../data-transfer-models";
 import { getChart, getCharts } from '.';
+import { BroadcastChannel } from "worker_threads";
 
 export async function handleGetPropertyExpenses(req, res, next) {
   console.log('handleGetPropertyExpenses');
@@ -69,29 +70,43 @@ function validateUpdatePropertyExpenses(req) {
 
 
   function validateMortgageExpenses(mortgageExpenses: MortgageExpenseDTO) {
-    const {type} = mortgageExpenses;
+    const { type } = mortgageExpenses;
 
-    if (type === SPITZER_LOAN) {
-      const { startDate, loanAmount, duration, loanRate } = <SpitzerLoanDTO>mortgageExpenses;
+    const { startDate, loanAmount } = mortgageExpenses;
+    const isCommonValid = (
+      /\d{4}-\d{2}-\d{2}/.test(startDate) &&
+      typeof loanAmount === 'number'
+    );
 
-      const isValid = (
-        /\d{4}-\d{2}-\d{2}/.test(startDate) &&
-        typeof loanAmount === 'number' &&
-        typeof duration === 'number' &&
-        typeof loanRate === 'number'
-      )
+    let isCustomValid = null;
+    switch (type) {
+      case SPITZER_LOAN:
+        const { duration, loanRate } = <SpitzerLoanDTO>mortgageExpenses;
 
-      if (!isValid) {
-        throw new Error(`invalid update property expenses input, json: ${JSON.stringify(mortgageExpenses)}`);
-      }
+        isCustomValid = (
+          typeof duration === 'number' &&
+          typeof loanRate === 'number'
+        );
+        break;
+
+      case NORMAL_LOAN:
+        const { paymentPeriods } = <NormalLoanDTO>mortgageExpenses;
+
+        isCustomValid = (
+          paymentPeriods.every(({ duration, amount }) => (
+            typeof duration === 'number' &&
+            typeof amount === 'number'
+          ))
+        );
+        break;
+
+      default:
+        throw new Error(`invalid update property expenses input, invalid type: ${type}`);
     }
 
-    else if (type === NORMAL_LOAN) {
-      // TODO: implement validation
-    }
-
-    else {
-      throw new Error(`invalid update property expenses input, invalid type: ${type}`);
+    const isValid = isCommonValid && isCustomValid;
+    if (!isValid) {
+      throw new Error(`invalid update property expenses input, json: ${JSON.stringify(mortgageExpenses)}`);
     }
   }
 }

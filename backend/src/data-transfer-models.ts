@@ -6,9 +6,14 @@ export interface ChartDTO {
   monthlyExpenses: number[];
   oneTimeExpenses: number[];
   mortgageExpenses: number[];
+  
   avgAnnualIncome: number;
   avgAnnualExpense: number;
   avgAnnualProfit: number;
+
+  userInputOneTime: OneTimeExpenseDTO[];
+  userInputMonthly: MonthlyExpenseDTO[];
+  userInputMortgage: MortgageExpenseDTO;
 }
 
 export interface PropertyExpensesDTO {
@@ -37,7 +42,6 @@ export interface NormalLoanDTO {
   type: 'NORMAL'
   startDate: PgDate;
   loanAmount: number;
-  
   paymentPeriods: PaymentPeriodDBO[]
 }
 
@@ -50,7 +54,6 @@ export interface SpitzerLoanDTO {
   type: 'SPITZER'
   startDate: PgDate;
   loanAmount: number;
-
   duration :number;
   loanRate: number;
 }

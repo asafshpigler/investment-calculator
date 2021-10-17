@@ -1,8 +1,8 @@
 import { PgDate } from "../../../data-transfer-models";
-import { MonthId, PropertyMonthlyFigures } from "./charts";
+import { MonthId, PropertyAttributes, PropertyMonth } from "./charts";
 
-export function findPropertyFigures(propertyMonthlyFigures: PropertyMonthlyFigures[], monthId: MonthId): PropertyMonthlyFigures {
-  return propertyMonthlyFigures.find(pm => pm.year === monthId.year && pm.month === monthId.month);
+export function findPropertyFigures(propertyAttributes: PropertyMonth[], monthId: MonthId): PropertyMonth {
+  return propertyAttributes.find(pm => pm.year === monthId.year && pm.month === monthId.month);
 }
 
 export function extractMonthId(date: PgDate) {
@@ -28,7 +28,7 @@ export function daysInMonth (year, month): number {
   return new Date(year, month, 0).getDate();
 }
 
-export function createMonthlyFigures(monthlyFigures: Partial<PropertyMonthlyFigures>): PropertyMonthlyFigures  {
+export function createPropertyMonth(monthlyFigures: Partial<PropertyMonth>): PropertyMonth  {
   const {year, month, nightlyPrice, occupancyRate, oneTimeExpenses, monthlyExpenses, mortgageExpense} = monthlyFigures || {};
 
   return {

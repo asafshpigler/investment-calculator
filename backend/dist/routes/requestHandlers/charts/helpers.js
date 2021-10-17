@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.incrementMonth = exports.generateMonthIds = exports.createMonthlyFigures = exports.daysInMonth = exports.sum = exports.extractMonthId = exports.findPropertyFigures = void 0;
-function findPropertyFigures(propertyMonthlyFigures, monthId) {
-    return propertyMonthlyFigures.find(pm => pm.year === monthId.year && pm.month === monthId.month);
+exports.incrementMonth = exports.generateMonthIds = exports.createPropertyMonth = exports.daysInMonth = exports.sum = exports.extractMonthId = exports.findPropertyFigures = void 0;
+function findPropertyFigures(propertyAttributes, monthId) {
+    return propertyAttributes.find(pm => pm.year === monthId.year && pm.month === monthId.month);
 }
 exports.findPropertyFigures = findPropertyFigures;
 function extractMonthId(date) {
@@ -26,7 +26,7 @@ function daysInMonth(year, month) {
     return new Date(year, month, 0).getDate();
 }
 exports.daysInMonth = daysInMonth;
-function createMonthlyFigures(monthlyFigures) {
+function createPropertyMonth(monthlyFigures) {
     const { year, month, nightlyPrice, occupancyRate, oneTimeExpenses, monthlyExpenses, mortgageExpense } = monthlyFigures || {};
     return {
         year: year || null,
@@ -38,7 +38,7 @@ function createMonthlyFigures(monthlyFigures) {
         mortgageExpense: mortgageExpense || null,
     };
 }
-exports.createMonthlyFigures = createMonthlyFigures;
+exports.createPropertyMonth = createPropertyMonth;
 function generateMonthIds(monthId, duration) {
     const monthIds = [];
     const { year: initialYear, month: initialMonth } = monthId;

@@ -1,0 +1,11 @@
+.loan-rate-container {
+  align-items: initial;
+}
+
+.input-container .loan-rate-label {
+  margin-right: 36px;
+}
+
+.loan-rate-slider {
+  max-width: 270px;
+}

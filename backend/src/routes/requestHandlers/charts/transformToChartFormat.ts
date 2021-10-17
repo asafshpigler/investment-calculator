@@ -1,13 +1,13 @@
 import moment from "moment";
 import { daysInMonth } from "./helpers";
-import { ChartDTO } from "../../../data-transfer-models";
+import { ChartDTO, SPITZER_LOAN } from "../../../data-transfer-models";
 import { sum } from "./helpers";
-import { PropertyMonthlyFigures } from "./charts";
+import { PropertyAttributes } from "./charts";
 
 // prepare data for chart display, for a single property
-export function transformToChartFormat(propertyId: number, propertyMonthlyFigures: PropertyMonthlyFigures[]): ChartDTO {
+export function transformToChartFormat(propertyId: number, propertyAttributes: PropertyAttributes): ChartDTO {
   // sort months in chronological order
-  propertyMonthlyFigures.sort((a, b) => {
+  propertyAttributes.months.sort((a, b) => {
     if (a.year !== b.year) {
       return a.year - b.year;
     }
@@ -25,13 +25,13 @@ export function transformToChartFormat(propertyId: number, propertyMonthlyFigure
   const netRevenues = [];
 
   // for each month of a property, push data for incomes, expenses, net revenue
-  propertyMonthlyFigures.forEach(pm => {
-    const mortgageExpense: number = pm.mortgageExpense ? +(pm.mortgageExpense).toFixed(2) : pm.mortgageExpense;
-    const label: string = moment({ year: pm.year, month: pm.month - 1 }).format("MMM YY");
-    const numOfDays: number = daysInMonth(pm.year, pm.month);
-    const income: number = Math.trunc(numOfDays * pm.occupancyRate * pm.nightlyPrice);
-    const oneTimeSum: number = sum(pm.oneTimeExpenses);
-    const monthlySum: number = sum(pm.monthlyExpenses);
+  propertyAttributes.months.forEach(attrs => {
+    const mortgageExpense: number = attrs.mortgageExpense ? +(attrs.mortgageExpense).toFixed(2) : attrs.mortgageExpense;
+    const label: string = moment({ year: attrs.year, month: attrs.month - 1 }).format("MMM YY");
+    const numOfDays: number = daysInMonth(attrs.year, attrs.month);
+    const income: number = Math.trunc(numOfDays * attrs.occupancyRate * attrs.nightlyPrice);
+    const oneTimeSum: number = sum(attrs.oneTimeExpenses);
+    const monthlySum: number = sum(attrs.monthlyExpenses);
     const netRevenue: number = income - oneTimeSum - monthlySum - mortgageExpense;
     
     // note: expenses are turned to negative numbers
@@ -43,7 +43,7 @@ export function transformToChartFormat(propertyId: number, propertyMonthlyFigure
     netRevenues.push(netRevenue);
   })
 
-  const amountOfMonths = propertyMonthlyFigures.length;
+  const amountOfMonths = propertyAttributes.months.length;
 
   const totalIncome = sum(incomes);
   const avgMonthlyIncome = Math.trunc(totalIncome / amountOfMonths);
@@ -57,6 +57,12 @@ export function transformToChartFormat(propertyId: number, propertyMonthlyFigure
   // note: addition is used because all of the expenses are negative
   const avgAnnualProfit = avgAnnualIncome + avgAnnualExpense;
 
+  const {userInputOneTime, userInputMonthly, userInputMortgage} = propertyAttributes;
+
+  if (userInputMortgage && userInputMortgage.type === SPITZER_LOAN) {
+    userInputMortgage.loanRate = +(userInputMortgage.loanRate * 100).toFixed(1);
+  }
+
   const chart: ChartDTO = {
     propertyId,
     labels,
@@ -67,7 +73,10 @@ export function transformToChartFormat(propertyId: number, propertyMonthlyFigure
     mortgageExpenses,
     avgAnnualIncome,
     avgAnnualExpense,
-    avgAnnualProfit
+    avgAnnualProfit,
+    userInputOneTime,
+    userInputMonthly,
+    userInputMortgage,
   }
 
   return chart;

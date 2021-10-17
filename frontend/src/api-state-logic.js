@@ -1,7 +1,6 @@
-import moment from 'moment';
 import * as api from 'api';
 import store from './store';
-import { setCharts, setCurrentChart, setPropertyIds } from 'store/charts';
+import { setCharts, setCurrentChart, setPropertyIds, LOAN_TYPES } from 'store/charts';
 import { setUserLoggedIn } from 'store/session';
 
 // login used by the application, to resume an existing session, if exists
@@ -49,29 +48,45 @@ async function getUserData() {
   store.dispatch(setPropertyIds(charts.map(p => p.propertyId)));
 }
 
-
 export function setChartByPropertyId(propertyId) {
+  console.log('setChartByPropertyId', propertyId);
+
   const charts = store.getState().charts.value.charts;
   const currentChart = charts.find(c => c.propertyId === propertyId);
 
+  console.log({currentChart});
   store.dispatch(setCurrentChart(currentChart));
 }
 
-export async function updateExpenses(mortgageExpenses) {
-  const {loanType, startDate, amount, duration, loanRate} = mortgageExpenses;
+export async function updateExpenses() {
+  const userInputMortgage = store.getState().charts.value.currentChart.userInputMortgage;
+  const {type, startDate, loanAmount, duration, loanRate, paymentPeriods} = userInputMortgage;
+
+  let mortgageExpenses = null;
+  if (type === LOAN_TYPES.SPITZER) {
+    mortgageExpenses = {
+      type,
+      startDate,
+      loanAmount,
+
+      duration,
+      loanRate: +(loanRate / 100).toFixed(4)
+    }
+  } else if (type === LOAN_TYPES.NORMAL) {
+    mortgageExpenses = {
+      type,
+      startDate,
+      loanAmount,
+
+      paymentPeriods,
+    }
+  }
 
   const propertyExpenses = {
     propertyId: store.getState().charts.value.currentChart.propertyId,
     oneTimeExpenses: [],
     monthlyExpenses: [],
-
-    mortgageExpenses: {
-      type: loanType,
-      startDate: moment(startDate).format('YYYY-MM-DD'),
-      loanAmount: amount,
-      duration,
-      loanRate: loanRate / 100
-    }
+    mortgageExpenses,
   }
 
   const chart = await api.updateExpenses(propertyExpenses);

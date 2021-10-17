@@ -64,7 +64,6 @@ async function getChart(req, propertyId) {
     const userId = req.session.user.id;
     const expenses = await db.getPropertyExpenses(userId, propertyId);
     // group: incomes & expenses by property id
-    // TODO: consider solving ugly reuse of getPropertyMap
     const propertyMap = (0, getPropertyMap_1.getPropertyMap)(periods, [expenses]);
     // transform: property data to chart friendly format
     const chart = (0, transformToChartFormat_1.transformToChartFormat)(propertyId, propertyMap.get(propertyId));

@@ -1,6 +1,16 @@
-export type PropertyMap = Map<number ,PropertyMonthlyFigures[]>;
+import { MonthlyExpenseDTO, MortgageExpenseDTO, OneTimeExpenseDTO } from "../../../data-transfer-models";
 
-export interface PropertyMonthlyFigures {
+export type PropertyMap = Map<number ,PropertyAttributes>;
+
+export interface PropertyAttributes {
+  months: PropertyMonth[]
+
+  userInputOneTime: OneTimeExpenseDTO[];
+  userInputMonthly: MonthlyExpenseDTO[];
+  userInputMortgage: MortgageExpenseDTO;
+}
+
+interface PropertyMonth {
   year: number;
   month: number;
   occupancyRate: number;

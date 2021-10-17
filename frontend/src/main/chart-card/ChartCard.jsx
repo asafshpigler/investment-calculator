@@ -19,7 +19,6 @@ function ChartCard() {
   const propertyIds = useSelector(selectPropertyIds);
   
   function handleOnChange(event) {
-    console.log('on select change');
     setChartByPropertyId(event.target.value);
   }
 

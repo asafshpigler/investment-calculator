@@ -71,21 +71,27 @@ function validateUpdatePropertyExpenses(req) {
     validateMortgageExpenses(mortgageExpenses);
     function validateMortgageExpenses(mortgageExpenses) {
         const { type } = mortgageExpenses;
-        if (type === data_transfer_models_1.SPITZER_LOAN) {
-            const { startDate, loanAmount, duration, loanRate } = mortgageExpenses;
-            const isValid = (/\d{4}-\d{2}-\d{2}/.test(startDate) &&
-                typeof loanAmount === 'number' &&
-                typeof duration === 'number' &&
-                typeof loanRate === 'number');
-            if (!isValid) {
-                throw new Error(`invalid update property expenses input, json: ${JSON.stringify(mortgageExpenses)}`);
-            }
+        const { startDate, loanAmount } = mortgageExpenses;
+        const isCommonValid = (/\d{4}-\d{2}-\d{2}/.test(startDate) &&
+            typeof loanAmount === 'number');
+        let isCustomValid = null;
+        switch (type) {
+            case data_transfer_models_1.SPITZER_LOAN:
+                const { duration, loanRate } = mortgageExpenses;
+                isCustomValid = (typeof duration === 'number' &&
+                    typeof loanRate === 'number');
+                break;
+            case data_transfer_models_1.NORMAL_LOAN:
+                const { paymentPeriods } = mortgageExpenses;
+                isCustomValid = (paymentPeriods.every(({ duration, amount }) => (typeof duration === 'number' &&
+                    typeof amount === 'number')));
+                break;
+            default:
+                throw new Error(`invalid update property expenses input, invalid type: ${type}`);
         }
-        else if (type === data_transfer_models_1.NORMAL_LOAN) {
-            // TODO: implement validation
-        }
-        else {
-            throw new Error(`invalid update property expenses input, invalid type: ${type}`);
+        const isValid = isCommonValid && isCustomValid;
+        if (!isValid) {
+            throw new Error(`invalid update property expenses input, json: ${JSON.stringify(mortgageExpenses)}`);
         }
     }
 }

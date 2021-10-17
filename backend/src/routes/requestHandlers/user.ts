@@ -30,7 +30,11 @@ export async function handleLoginRequest(req, res, next) {
   console.log('handleLoginRequest');
   
   try {
-    validateLoginInput(req);
+    if (!req.body.userName && !req.session.user) {
+      console.log('no existing session to resume');
+      res.end();
+      return;
+    }
     
     const {userName} = req.body;
     const {user: sessionUser} = req.session;
@@ -53,12 +57,6 @@ export async function handleLoginRequest(req, res, next) {
     res.json(user);
   } catch (error) {
     next(error)
-  }
-}
-
-function validateLoginInput(req) {
-  if (!req.body.userName && !req.session.user) {
-    throw new Error('invalid login input');
   }
 }
 

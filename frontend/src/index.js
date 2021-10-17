@@ -7,7 +7,7 @@ import App from './App';
 import './index.css';
 import { appLogin } from 'api-state-logic';
 
-// appLogin().then(() => {
+appLogin().then(() => {
   ReactDOM.render(
     <React.StrictMode>
       <Provider store={store}>
@@ -16,4 +16,4 @@ import { appLogin } from 'api-state-logic';
     </React.StrictMode>,
     document.getElementById('root')
   );
-// })
+})
