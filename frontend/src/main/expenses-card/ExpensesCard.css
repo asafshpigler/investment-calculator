@@ -1,4 +1,4 @@
-.expenses-card .title {
+.expenses-card .tabs {
   margin-bottom: 16px;
 }
 
@@ -19,4 +19,15 @@
 
 .submit-btn-container .MuiButton-root {
   padding: 8px 48px;
+}
+
+.expenses-list-card {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.expenses-list-card .delete-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
 }

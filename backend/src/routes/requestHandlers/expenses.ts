@@ -1,8 +1,9 @@
 import * as db from "../../db";
 import { PropertyExpensesDBO } from "../../db/models/PropertyExpenses";
-import { ChartDTO, MortgageExpenseDTO, NormalLoanDTO, NORMAL_LOAN, PropertyExpensesDTO, SpitzerLoanDTO, SPITZER_LOAN } from "../../data-transfer-models";
-import { getChart, getCharts } from '.';
-import { BroadcastChannel } from "worker_threads";
+import { ChartDTO, MonthlyExpenseDTO, MortgageExpenseDTO, NormalLoanDTO, NORMAL_LOAN, OneTimeExpenseDTO, PropertyExpensesDTO, SpitzerLoanDTO, SPITZER_LOAN } from "../../data-transfer-models";
+import { getChart } from '.';
+
+const DATE_STRING_REGEX = /\d{4}-\d{2}-\d{2}/;
 
 export async function handleGetPropertyExpenses(req, res, next) {
   console.log('handleGetPropertyExpenses');
@@ -66,15 +67,39 @@ function validateUpdatePropertyExpenses(req) {
       can\'t tell which row to update, userId: ${userId}, propertyId: ${propertyId}`);
   }
 
+  validateOneTimeExpenses(oneTimeExpenses);
+  validateMonthlyExpenses(monthlyExpenses);
   validateMortgageExpenses(mortgageExpenses);
 
+  function validateOneTimeExpenses(oneTimeExpenses: OneTimeExpenseDTO[]) {
+    const isValid = oneTimeExpenses.every(({paymentDate, amount}) => (
+      DATE_STRING_REGEX.test(paymentDate) &&
+      typeof amount === 'number'
+    ))
+
+    if (!isValid) {
+      throw new Error(`invalid update property expenses input, invalid one time expenes, json: ${JSON.stringify(oneTimeExpenses)}`);
+    }
+  }
+
+  function validateMonthlyExpenses(monthlyExpenses: MonthlyExpenseDTO[]) {
+    const isValid = monthlyExpenses.every(({startDate, amount, duration}) => (
+      DATE_STRING_REGEX.test(startDate) &&
+      typeof amount === 'number' &&
+      typeof duration  === 'number'
+    ))
+
+    if (!isValid) {
+      throw new Error(`invalid update property expenses input, invalid monthly expenes, json: ${JSON.stringify(monthlyExpenses)}`);
+    }
+  }
 
   function validateMortgageExpenses(mortgageExpenses: MortgageExpenseDTO) {
     const { type } = mortgageExpenses;
 
     const { startDate, loanAmount } = mortgageExpenses;
     const isCommonValid = (
-      /\d{4}-\d{2}-\d{2}/.test(startDate) &&
+      DATE_STRING_REGEX.test(startDate) &&
       typeof loanAmount === 'number'
     );
 

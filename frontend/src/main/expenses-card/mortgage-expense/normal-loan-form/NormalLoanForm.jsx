@@ -1,7 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { addPaymentPeriod, selectMortgageAmount, selectMortgagePaymentPeriods, selectMortgageStartDate, setMortgageAmount, setMortgageDuration, setMortgageLoanRate, setMortgagePaymentPeriods, setMortgageStartDate } from "store/charts";
-import './NormalLoanForm.css';
 import { useDispatch } from "react-redux";
 import DateInput from "main/expenses-card/inputs/DateInput";
 import NumberInput from "main/expenses-card/inputs/NumberInput";
@@ -59,10 +58,11 @@ function NormalLoanForm() {
       <NumberInput value={amount} onChange={handleOnChangeAmount} title="Amount" />
 
       {paymentPeriods && paymentPeriods.map((period, i) => (
-        <Card className="payment-period-card" key={i} elevation={3}>
-          <IconButton onClick={handleOnClickDelete.bind(null, i)} className="delete-btn" aria-label="delete" color="error">
-            <DeleteIcon />
-          </IconButton>
+        <Card className="expenses-list-card" key={i} elevation={3}>
+          {i !== 0 &&
+            <IconButton onClick={handleOnClickDelete.bind(null, i)} className="delete-btn" aria-label="delete" color="error">
+              <DeleteIcon />
+            </IconButton>}
 
           <NumberInput value={period.duration} onChange={handleOnChangePaymentDuration.bind(null, i)} title="Duration (Months)" />
           <NumberInput value={period.amount} onChange={handleOnChangePaymentAmount.bind(null, i)} title="Amount" adornment="$" />

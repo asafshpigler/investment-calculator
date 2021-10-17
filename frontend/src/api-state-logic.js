@@ -1,9 +1,8 @@
 import * as api from 'api';
 import store from './store';
-import { setCharts, setCurrentChart, setPropertyIds, LOAN_TYPES } from 'store/charts';
+import { setCharts, setCurrentChart, setPropertyIds, LOAN_TYPES, replaceChartInCharts } from 'store/charts';
 import { setUserLoggedIn } from 'store/session';
 
-// login used by the application, to resume an existing session, if exists
 export async function appLogin() {
   console.log('appLogin');
 
@@ -15,7 +14,6 @@ export async function appLogin() {
   }
 }
 
-// login used by the user, through UI
 export async function userLogin(userName) {
   await api.login(userName);
 
@@ -54,12 +52,11 @@ export function setChartByPropertyId(propertyId) {
   const charts = store.getState().charts.value.charts;
   const currentChart = charts.find(c => c.propertyId === propertyId);
 
-  console.log({currentChart});
   store.dispatch(setCurrentChart(currentChart));
 }
 
 export async function updateExpenses() {
-  const userInputMortgage = store.getState().charts.value.currentChart.userInputMortgage;
+  const {userInputMortgage, userInputOneTime, userInputMonthly, propertyId, charts} = store.getState().charts.value.currentChart;
   const {type, startDate, loanAmount, duration, loanRate, paymentPeriods} = userInputMortgage;
 
   let mortgageExpenses = null;
@@ -83,15 +80,14 @@ export async function updateExpenses() {
   }
 
   const propertyExpenses = {
-    propertyId: store.getState().charts.value.currentChart.propertyId,
-    oneTimeExpenses: [],
-    monthlyExpenses: [],
+    propertyId,
+    oneTimeExpenses: userInputOneTime,
+    monthlyExpenses: userInputMonthly,
     mortgageExpenses,
   }
 
   const chart = await api.updateExpenses(propertyExpenses);
 
-  console.log({chart});
-
   store.dispatch(setCurrentChart(chart));
+  store.dispatch(replaceChartInCharts(chart));
 }

@@ -1,8 +1,19 @@
 import moment from "moment";
 import { daysInMonth } from "./helpers";
-import { ChartDTO, SPITZER_LOAN } from "../../../data-transfer-models";
+import { ChartDTO, MonthlyExpenseDTO, OneTimeExpenseDTO, SpitzerLoanDTO, SPITZER_LOAN } from "../../../data-transfer-models";
 import { sum } from "./helpers";
 import { PropertyAttributes } from "./charts";
+
+const TODAY_DATE_STRING = moment().format('YYYY-MM-DD');
+const DEFAULT_USER_INPUT_ONE_TIME: OneTimeExpenseDTO[] = [{paymentDate: TODAY_DATE_STRING, amount: 0}];
+const DEFAULT_USER_INPUT_MONTHLY: MonthlyExpenseDTO[] = [{startDate: TODAY_DATE_STRING, amount: 0, duration: 0}];
+const DEFAULT_USER_INPUT_MORTGAGE: SpitzerLoanDTO = {
+  type: SPITZER_LOAN,
+  startDate: TODAY_DATE_STRING,
+  loanAmount: 0,
+  duration: 0,
+  loanRate: 1.5,
+}
 
 // prepare data for chart display, for a single property
 export function transformToChartFormat(propertyId: number, propertyAttributes: PropertyAttributes): ChartDTO {
@@ -74,9 +85,9 @@ export function transformToChartFormat(propertyId: number, propertyAttributes: P
     avgAnnualIncome,
     avgAnnualExpense,
     avgAnnualProfit,
-    userInputOneTime,
-    userInputMonthly,
-    userInputMortgage,
+    userInputOneTime: userInputOneTime.length ? userInputOneTime : DEFAULT_USER_INPUT_ONE_TIME,
+    userInputMonthly: userInputMonthly.length ? userInputMonthly : DEFAULT_USER_INPUT_MONTHLY,
+    userInputMortgage: Object.keys(userInputMortgage).length ? userInputMortgage : DEFAULT_USER_INPUT_MORTGAGE,
   }
 
   return chart;

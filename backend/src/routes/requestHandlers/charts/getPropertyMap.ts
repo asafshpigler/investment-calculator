@@ -1,18 +1,8 @@
+import { MonthlyExpenseDTO, MortgageExpenseDTO, NormalLoanDTO, NORMAL_LOAN, OneTimeExpenseDTO, SpitzerLoanDTO, SPITZER_LOAN } from "../../../data-transfer-models";
 import { PropertyExpensesDBO } from "../../../db/models/PropertyExpenses";
 import { PropertyPeriodDBO } from "../../../db/models/PropertyPeriod";
+import { MonthId, PropertyAttributes, PropertyMap, PropertyMonth } from "./charts";
 import { createPropertyMonth, extractMonthId, findPropertyFigures, generateMonthIds, incrementMonth } from "./helpers";
-import { MonthId, PropertyMap, PropertyAttributes, PropertyMonth } from "./charts";
-import { OneTimeExpenseDTO, MonthlyExpenseDTO, PgDate, MortgageExpenseDTO, SpitzerLoanDTO, NormalLoanDTO, SPITZER_LOAN, NORMAL_LOAN } from "../../../data-transfer-models";
-import moment from "moment";
-
-const DEFAULT_USER_INPUT_MORTGAGE: SpitzerLoanDTO = {
-  type: SPITZER_LOAN,
-  startDate: moment().format('YYYY-MM-DD'),
-  loanAmount: 0,
-  duration: 0,
-  loanRate: 1.5,
-}
-
 
 export function getPropertyMap(periods: PropertyPeriodDBO[], expenses: PropertyExpensesDBO[]): PropertyMap {
   const map: PropertyMap = new Map();
@@ -38,7 +28,7 @@ function mapPeriods(map: PropertyMap, periods: PropertyPeriodDBO[]) {
         months: [],
         userInputOneTime: [],
         userInputMonthly: [],
-        userInputMortgage: DEFAULT_USER_INPUT_MORTGAGE,
+        userInputMortgage: <MortgageExpenseDTO>{},
       };
       map.set(property_id, propertyAttributes);
     }

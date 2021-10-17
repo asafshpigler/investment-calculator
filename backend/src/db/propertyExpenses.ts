@@ -46,9 +46,9 @@ async function updatePropertyExpenses(propertyExpenses: PropertyExpensesDTO): Pr
   return await db.client
     .query(
       `UPDATE ${PROPERTY_EXPENSES_TABLE}
-      SET mortgage_expense = $3
+      SET one_time_expenses = $3, monthly_expenses = $4, mortgage_expense = $5
       WHERE user_id = $1 AND property_id = $2`,
-      [userId, propertyId, /* oneTimeExpenses, monthlyExpenses, */ mortgageExpenses]
+      [userId, propertyId, oneTimeExpenses, monthlyExpenses, mortgageExpenses]
     )
     .then(res => res.rowCount);
 }

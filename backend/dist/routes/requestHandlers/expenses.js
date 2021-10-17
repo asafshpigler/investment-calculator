@@ -23,6 +23,7 @@ exports.handleUpdatePropertyExpenses = exports.handleGetPropertyExpenses = void 
 const db = __importStar(require("../../db"));
 const data_transfer_models_1 = require("../../data-transfer-models");
 const _1 = require(".");
+const DATE_STRING_REGEX = /\d{4}-\d{2}-\d{2}/;
 async function handleGetPropertyExpenses(req, res, next) {
     console.log('handleGetPropertyExpenses');
     // TO REMOVE AFTER: handling user authentication, cookies
@@ -68,11 +69,28 @@ function validateUpdatePropertyExpenses(req) {
         throw new Error(`invalid update property expenses input,
       can\'t tell which row to update, userId: ${userId}, propertyId: ${propertyId}`);
     }
+    validateOneTimeExpenses(oneTimeExpenses);
+    validateMonthlyExpenses(monthlyExpenses);
     validateMortgageExpenses(mortgageExpenses);
+    function validateOneTimeExpenses(oneTimeExpenses) {
+        const isValid = oneTimeExpenses.every(({ paymentDate, amount }) => (DATE_STRING_REGEX.test(paymentDate) &&
+            typeof amount === 'number'));
+        if (!isValid) {
+            throw new Error(`invalid update property expenses input, invalid one time expenes, json: ${JSON.stringify(oneTimeExpenses)}`);
+        }
+    }
+    function validateMonthlyExpenses(monthlyExpenses) {
+        const isValid = monthlyExpenses.every(({ startDate, amount, duration }) => (DATE_STRING_REGEX.test(startDate) &&
+            typeof amount === 'number' &&
+            typeof duration === 'number'));
+        if (!isValid) {
+            throw new Error(`invalid update property expenses input, invalid monthly expenes, json: ${JSON.stringify(monthlyExpenses)}`);
+        }
+    }
     function validateMortgageExpenses(mortgageExpenses) {
         const { type } = mortgageExpenses;
         const { startDate, loanAmount } = mortgageExpenses;
-        const isCommonValid = (/\d{4}-\d{2}-\d{2}/.test(startDate) &&
+        const isCommonValid = (DATE_STRING_REGEX.test(startDate) &&
             typeof loanAmount === 'number');
         let isCustomValid = null;
         switch (type) {

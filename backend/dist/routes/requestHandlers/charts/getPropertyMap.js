@@ -1,19 +1,8 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPropertyMap = void 0;
-const helpers_1 = require("./helpers");
 const data_transfer_models_1 = require("../../../data-transfer-models");
-const moment_1 = __importDefault(require("moment"));
-const DEFAULT_USER_INPUT_MORTGAGE = {
-    type: data_transfer_models_1.SPITZER_LOAN,
-    startDate: (0, moment_1.default)().format('YYYY-MM-DD'),
-    loanAmount: 0,
-    duration: 0,
-    loanRate: 1.5,
-};
+const helpers_1 = require("./helpers");
 function getPropertyMap(periods, expenses) {
     const map = new Map();
     mapPeriods(map, periods);
@@ -34,7 +23,7 @@ function mapPeriods(map, periods) {
                 months: [],
                 userInputOneTime: [],
                 userInputMonthly: [],
-                userInputMortgage: DEFAULT_USER_INPUT_MORTGAGE,
+                userInputMortgage: {},
             };
             map.set(property_id, propertyAttributes);
         }

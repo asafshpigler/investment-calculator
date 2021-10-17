@@ -8,6 +8,16 @@ const moment_1 = __importDefault(require("moment"));
 const helpers_1 = require("./helpers");
 const data_transfer_models_1 = require("../../../data-transfer-models");
 const helpers_2 = require("./helpers");
+const TODAY_DATE_STRING = (0, moment_1.default)().format('YYYY-MM-DD');
+const DEFAULT_USER_INPUT_ONE_TIME = [{ paymentDate: TODAY_DATE_STRING, amount: 0 }];
+const DEFAULT_USER_INPUT_MONTHLY = [{ startDate: TODAY_DATE_STRING, amount: 0, duration: 0 }];
+const DEFAULT_USER_INPUT_MORTGAGE = {
+    type: data_transfer_models_1.SPITZER_LOAN,
+    startDate: TODAY_DATE_STRING,
+    loanAmount: 0,
+    duration: 0,
+    loanRate: 1.5,
+};
 // prepare data for chart display, for a single property
 function transformToChartFormat(propertyId, propertyAttributes) {
     // sort months in chronological order
@@ -68,9 +78,9 @@ function transformToChartFormat(propertyId, propertyAttributes) {
         avgAnnualIncome,
         avgAnnualExpense,
         avgAnnualProfit,
-        userInputOneTime,
-        userInputMonthly,
-        userInputMortgage,
+        userInputOneTime: userInputOneTime.length ? userInputOneTime : DEFAULT_USER_INPUT_ONE_TIME,
+        userInputMonthly: userInputMonthly.length ? userInputMonthly : DEFAULT_USER_INPUT_MONTHLY,
+        userInputMortgage: Object.keys(userInputMortgage).length ? userInputMortgage : DEFAULT_USER_INPUT_MORTGAGE,
     };
     return chart;
 }
