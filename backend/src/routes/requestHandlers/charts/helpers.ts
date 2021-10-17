@@ -23,7 +23,6 @@ export function sum(nums): number {
   using 0 as the day it will give us the last day of the prior month.
   So passing in 1 as the month will return the last day of January, not February
 */
-
 export function daysInMonth (year, month): number {
   return new Date(year, month, 0).getDate();
 }
@@ -52,7 +51,7 @@ export function generateMonthIds(monthId: MonthId, duration: number): MonthId[] 
   let currYear = initialYear;
   let currMonth =  initialMonth;
   
-  // we've already inserted 1 month so we iterate one time less than usual
+  // note: one less iteration, already done
   for (let i = 0; i < duration-1; i++) {
       const nextMonth: MonthId = incrementMonth(currYear, currMonth);
       currYear = nextMonth.year;

@@ -3,7 +3,7 @@ import * as db from '.';
 
 const USER_TABLE = 'public.user';
 
-export async function getUser(userName: string): Promise<UserDBO> {
+export async function getUser(userName: string): Promise<UserDBO> {  
   return await db.client
     .query(
       `SELECT * FROM ${USER_TABLE}

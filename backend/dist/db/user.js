@@ -23,6 +23,7 @@ exports.insertUser = exports.getUser = void 0;
 const db = __importStar(require("."));
 const USER_TABLE = 'public.user';
 async function getUser(userName) {
+    await db.connect();
     return await db.client
         .query(`SELECT * FROM ${USER_TABLE}
       WHERE name = '${userName}'`)

@@ -6,7 +6,6 @@ function attachRoutes(app) {
     app.post('/login', requestHandlers_1.handleLoginRequest);
     app.post('/logout', requestHandlers_1.handleLogoutRequest);
     app.get('/charts', requestHandlers_1.handleGetCharts);
-    app.get('/property-expenses', requestHandlers_1.handleGetPropertyExpenses);
     app.post('/property-expenses', requestHandlers_1.handleUpdatePropertyExpenses);
 }
 exports.default = attachRoutes;

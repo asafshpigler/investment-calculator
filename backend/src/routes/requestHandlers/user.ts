@@ -22,10 +22,6 @@ function validateSignupInput(req) {
   }
 }
 
-// TODO: this should respond in user, and charts, and avg numbers, and expenses
-
-// TODO NOW: for now, just respond with the user itself, (which is saved on session, not just user id)
-//    in case it already exists, before querying to SQL
 export async function handleLoginRequest(req, res, next) {
   console.log('handleLoginRequest');
   
@@ -49,7 +45,7 @@ export async function handleLoginRequest(req, res, next) {
       req.session.user = userFromDB;
     }
 
-    // application login, resume usage of website
+    // application login
     else {
       user = sessionUser;
     }
@@ -67,8 +63,6 @@ export function handleLogoutRequest(req, res, next) {
     res.end();
   });
 }
-
-// REMOVE ON POLISH: actual logic
 
 async function signUp(userName: string): Promise<UserDBO> {
   const isUserExists: boolean = !!await db.getUser(userName);

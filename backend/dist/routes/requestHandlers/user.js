@@ -39,9 +39,6 @@ function validateSignupInput(req) {
         throw new Error('invalid signup input');
     }
 }
-// TODO: this should respond in user, and charts, and avg numbers, and expenses
-// TODO NOW: for now, just respond with the user itself, (which is saved on session, not just user id)
-//    in case it already exists, before querying to SQL
 async function handleLoginRequest(req, res, next) {
     console.log('handleLoginRequest');
     try {
@@ -59,7 +56,7 @@ async function handleLoginRequest(req, res, next) {
             user = userFromDB;
             req.session.user = userFromDB;
         }
-        // application login, resume usage of website
+        // application login
         else {
             user = sessionUser;
         }
@@ -77,7 +74,6 @@ function handleLogoutRequest(req, res, next) {
     });
 }
 exports.handleLogoutRequest = handleLogoutRequest;
-// REMOVE ON POLISH: actual logic
 async function signUp(userName) {
     const isUserExists = !!await db.getUser(userName);
     if (isUserExists) {

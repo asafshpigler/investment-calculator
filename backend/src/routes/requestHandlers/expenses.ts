@@ -1,36 +1,8 @@
 import * as db from "../../db";
-import { PropertyExpensesDBO } from "../../db/models/PropertyExpenses";
 import { ChartDTO, MonthlyExpenseDTO, MortgageExpenseDTO, NormalLoanDTO, NORMAL_LOAN, OneTimeExpenseDTO, PropertyExpensesDTO, SpitzerLoanDTO, SPITZER_LOAN } from "../../data-transfer-models";
 import { getChart } from '.';
 
 const DATE_STRING_REGEX = /\d{4}-\d{2}-\d{2}/;
-
-export async function handleGetPropertyExpenses(req, res, next) {
-  console.log('handleGetPropertyExpenses');
-
-  // TO REMOVE AFTER: handling user authentication, cookies
-  // ITS OK: this request handler will become deprecated later eitherway. we can get expenses and charts
-  //    and numbers separately, but since we don't have a caching service (yet!), and it's additional network requests
-  //    that redunandt and ineffecit
-  // SOON DEPRECATED anyways
-
-  try {
-    validateGetPropertyExpenses(req);
-
-    const userId = req.session.user.id;
-    const propertyExpenses: PropertyExpensesDBO[] = await db.getPropertiesExpenses(userId);
-
-    res.json(propertyExpenses);
-  } catch (error) {
-    next(error);
-  }
-}
-
-function validateGetPropertyExpenses(req) {
-  if (!req.session.user) {
-    throw new Error('invalid get property expenses input');
-  }
-}
 
 export async function handleUpdatePropertyExpenses(req, res, next) {
   console.log('handleUpdatePropertyExpenses');

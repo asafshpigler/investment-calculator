@@ -21,6 +21,7 @@ app.use(session({
 
 attachRoutes(app);
 
+// suboptimal: connection to db remains open
 db.connect().then(() => {
     console.log('connected to db');
 

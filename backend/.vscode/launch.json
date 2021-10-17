@@ -12,9 +12,7 @@
       "resolveSourceMapLocations": [
         "${workspaceFolder}/**",
         "!**/node_modules/**"
-      ],
-      // "preLaunchTask": "prepare app to debug",
-      // "postDebugTask": "clean app after debug"
+      ]
     }
   ]
 }

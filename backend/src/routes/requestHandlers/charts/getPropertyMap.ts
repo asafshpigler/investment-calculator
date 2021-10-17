@@ -34,10 +34,8 @@ function mapPeriods(map: PropertyMap, periods: PropertyPeriodDBO[]) {
     }
 
     /*
-      add the newly extracted monthly figures (nightly_price & occupancy_rate)*
+      add the newly extracted monthly figures (nightly_price & occupancy_rate)
       to the accumulation of many monthly figures of the current property
-
-      *each period is unique, identified by year & month, enforced by DB
     */
     const newMonth: PropertyMonth = createPropertyMonth({
       year,
@@ -57,7 +55,7 @@ function mapExpenses(map: PropertyMap, expenses: PropertyExpensesDBO[]) {
 
     const propertyAttributes: PropertyAttributes = map.get(property_id);
 
-    // attach raw user input, to showcase in form
+    // attach raw user input
     propertyAttributes.userInputOneTime = one_time_expenses;
     propertyAttributes.userInputMonthly = monthly_expenses;
     propertyAttributes.userInputMortgage = mortgage_expense;
@@ -187,11 +185,6 @@ function attachAmount(
     if monthly figures doesn't exist - create one
     could happen when there is only expenses for this month, no income
   */
-
-  // is monthly figures a singular entity or nah?
-  // if I want to push a new monthly figures where do i push it to
-  // and howcome they both have the same name
-
   const targetMonth: PropertyMonth = findPropertyFigures(propertyMonths, monthId);
 
   if (!targetMonth) {
@@ -211,8 +204,7 @@ function attachAmount(
     arrayField.push(amount);
   }
   else {
-    // @ts-ignore
-    targetMonth[expenseField] = amount;
+    (<number>targetMonth[expenseField]) = amount;
   }
 }
 

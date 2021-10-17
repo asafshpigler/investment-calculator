@@ -58,9 +58,6 @@ export interface SpitzerLoanDTO {
   loanRate: number;
 }
 
-// postgres works with dates in the format of year-month-day, when the column type is Date
-// in this codebase, the dates are saved inside jsonb columns. the format in which the dates will be saved
-// inside jsonb will conform as well.
 export type PgDate = string // 'yyyy-mm-dd';
 
 export const SPITZER_LOAN = 'SPITZER';
