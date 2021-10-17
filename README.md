@@ -1,20 +1,21 @@
-SETUP
+# Investment Calculator
 
-TODO: write script for creating tables
+Visualizing the expenses, income, and overall net revenue of several properties,
+supporting real estate investors in making more calculated investments
 
+[Check it out!](https://shpigler-investment-calculator.herokuapp.com/)
 
-Prerequisites
-Postgres v14.0
-Node v14.18.0
+### Installing Locally
 
-Cd Backend
-	npm i
-	npm run build
-	npm run load-data (also runs build, a bit redundant)
-	npm start / npm run start-dev (when editing typescript files)
+Prerequisites:
+- Postgres v14.0
+- Node v14.18.0
 
-Cd Frontend
-	npm i
-	npm start
+Steps:
+1. clone the repo
+2. place .env file* in root dir
+3. create local db named "invest-calc"
+4. npm run build
+5. npm start
 
-
+*I'll send it privately

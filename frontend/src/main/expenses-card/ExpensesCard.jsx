@@ -9,7 +9,6 @@ import RadioGroup from "@mui/material/RadioGroup";
 import Typography from "@mui/material/Typography";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Box from '@mui/material/Box';
 
 import { updateExpenses } from 'api-state-logic';
 import { preventPageRefresh } from 'helpers';
@@ -27,7 +26,7 @@ function ExpensesCard() {
   const [tab, setTab] = useState(0);
 
   const handleChangeTab = (event, newValue) => {
-    console.log({newValue});
+    console.log({ newValue });
     setTab(newValue);
   };
 
@@ -42,22 +41,6 @@ function ExpensesCard() {
     console.log('expenses updated');
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  function renderMortgage() {
-    return (
-      <form onSubmit={handleOnSubmit}>
-        {renderTypeSelect()}
-
-        {type === LOAN_TYPES.SPITZER ?
-          <SpitzerLoanForm /> :
-          <NormalLoanForm />}
-
-        <footer className="submit-btn-container">
-          <Button variant="contained" endIcon={<SendIcon />} size="large" type="submit">Submit</Button>
-        </footer>
-      </form>
-    )
   }
 
   function renderTypeSelect() {
@@ -75,39 +58,57 @@ function ExpensesCard() {
     )
   }
 
+  function ExpenseForm(props) {
+    return (
+      <form onSubmit={handleOnSubmit}>
+        {props.children}
+
+        <footer className="submit-btn-container">
+          <Button variant="contained" endIcon={<SendIcon />} size="large" type="submit">Submit</Button>
+        </footer>
+      </form>
+    )
+  }
+
+  function TabPanel(props) {
+    return (
+      <div style={{ display: (tab === props.index ? 'initial' : 'none') }}>
+        {props.children}
+      </div>
+    )
+  }
+
   return (
     <Card elevation={3} className="expenses-card">
-      <Tabs className="tabs" value={tab} onChange={handleChangeTab} aria-label="basic tabs example">
+      <Tabs className="tabs" value={tab} onChange={handleChangeTab}>
         <Tab label="One Time Expenses" />
         <Tab label="Monthly Expenses" />
         <Tab label="Mortgage" />
       </Tabs>
 
-      <div style={{display: (tab === 0 ? 'initial' : 'none')}}>
-        <form onSubmit={handleOnSubmit}>
+      <TabPanel index={0}>
+        <ExpenseForm>
           <OneTimeExpense />
+        </ExpenseForm>
+      </TabPanel>
 
-          <footer className="submit-btn-container">
-            <Button variant="contained" endIcon={<SendIcon />} size="large" type="submit">Submit</Button>
-          </footer>
-        </form>
-      </div>
-
-      <div style={{display: (tab === 1 ? 'initial' : 'none')}}>
-        <form onSubmit={handleOnSubmit}>
+      <TabPanel index={1}>
+        <ExpenseForm>
           <MonthlyExpense />
+        </ExpenseForm>
+      </TabPanel>
 
-          <footer className="submit-btn-container">
-            <Button variant="contained" endIcon={<SendIcon />} size="large" type="submit">Submit</Button>
-          </footer>
-        </form>
-      </div>
+      <TabPanel index={2}>
+        <ExpenseForm>
+          {renderTypeSelect()}
 
-      <div style={{display: (tab === 2 ? 'initial' : 'none')}}>
-        {renderMortgage()}
-      </div>
+          {type === LOAN_TYPES.SPITZER ?
+            <SpitzerLoanForm /> :
+            <NormalLoanForm />}
+        </ExpenseForm>
+      </TabPanel>
 
-    </Card>
+    </Card >
   )
 }
 

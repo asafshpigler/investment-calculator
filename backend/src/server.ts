@@ -14,18 +14,17 @@ app.use(express.static('frontend/build'));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json())
 app.use(session({
-    secret: 'secret-key', // TODO: move to env
-    resave: true, // TODO: write expplanation
-    saveUninitialized: false, // TODO: write explanation
+    secret: process.env.SECRET,
+    resave: true,
+    saveUninitialized: false,
 }))
 
 attachRoutes(app);
 
-// TODO: consider how to manage this connection
 db.connect().then(() => {
     console.log('connected to db');
 
-    app.listen(process.env.PORT || PORT, () => {
+    app.listen(process.env.PORT, () => {
         console.log(`Server listening on the port::${PORT}`);
     });
 });
