@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "SETUP",
   "scripts": {
-    "start": "node backend/dist/server.js",
+    "start": "(cd backend && npm start)",
     "build": "(cd frontend && npm i && npm run build) && (cd backend && npm i && npm run build && npm run setup-db)",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

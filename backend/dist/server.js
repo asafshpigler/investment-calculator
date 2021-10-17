@@ -30,19 +30,18 @@ const db = __importStar(require("./db"));
 const attachRoutes_1 = __importDefault(require("./routes/attachRoutes"));
 const app = (0, express_1.default)();
 const PORT = 3080;
-app.use(express_1.default.static('frontend/build'));
+app.use(express_1.default.static('../frontend/build'));
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.json());
 app.use((0, express_session_1.default)({
-    secret: 'secret-key',
+    secret: process.env.SECRET,
     resave: true,
-    saveUninitialized: false, // TODO: write explanation
+    saveUninitialized: false,
 }));
 (0, attachRoutes_1.default)(app);
-// TODO: consider how to manage this connection
 db.connect().then(() => {
     console.log('connected to db');
-    app.listen(process.env.PORT || PORT, () => {
+    app.listen(process.env.PORT, () => {
         console.log(`Server listening on the port::${PORT}`);
     });
 });

@@ -13,9 +13,9 @@ Prerequisites:
 
 Steps:
 1. clone the repo
-2. place .env file* in root dir
+2. place .env file* in /backend dir
 3. create local db named "invest-calc"
 4. npm run build
 5. npm start
 
-*I'll send it privately
+*I'll send it privately, you might need to modify DB_URI
