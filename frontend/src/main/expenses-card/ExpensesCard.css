@@ -5,11 +5,10 @@
 .input-container {
   display: flex;
   align-items: center;
-  margin-bottom: 24px;
 }
 
-.input-container .input-label {
-  margin-right: 24px;
+.input-container:not(:last-child) {
+  margin-bottom: 24px;
 }
 
 .submit-btn-container {
@@ -28,6 +27,31 @@
 
 .expenses-list-card .delete-btn {
   position: absolute;
-  top: 16px;
-  right: 16px;
+}
+
+@media only screen and (min-width: 600px) {
+  .expenses-list-card .delete-btn {
+    top: 8px;
+    right: 8px;
+  }
+
+  .input-container .input-label {
+    margin-right: 24px;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .expenses-list-card .delete-btn {
+    top: 0;
+    right: 0;
+  }
+
+  .input-container {
+    justify-content: space-between;
+  }
+
+  .input-container .input-label {
+    font-size: 14px;
+    margin-right: 14px;
+  }
 }

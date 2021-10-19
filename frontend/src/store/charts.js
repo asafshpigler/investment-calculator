@@ -1,12 +1,8 @@
 
 import { createSlice } from '@reduxjs/toolkit'
+import { LOAN_TYPES } from 'const';
 import { clone } from 'helpers';
 import moment from 'moment';
-
-export const LOAN_TYPES = {
-  NORMAL: 'NORMAL',
-  SPITZER: 'SPITZER',
-}
 
 const TODAY_DATE_STRING = moment().format('YYYY-MM-DD');
 
@@ -115,6 +111,10 @@ export const chartsSlice = createSlice({
 export const selectCharts = state => state.charts.value.charts;
 export const selectCurrentChart = state => state.charts.value.currentChart;
 export const selectPropertyIds = state => state.charts.value.propertyIds;
+export const selectPropertyAnnualFigures = state => {
+  const { avgAnnualIncome, avgAnnualExpense, avgAnnualProfit } = state.charts.value.currentChart;
+  return ({ avgAnnualIncome, avgAnnualExpense, avgAnnualProfit });
+}
 
 export const selectMortgageType = state => state.charts.value.currentChart.userInputMortgage.type;
 export const selectMortgageStartDate = state => state.charts.value.currentChart.userInputMortgage.startDate;

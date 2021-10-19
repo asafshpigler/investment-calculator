@@ -10,9 +10,10 @@ import Typography from "@mui/material/Typography";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 
+import {IS_MOBILE, LOAN_TYPES} from 'const';
 import { updateExpenses } from 'api-state-logic';
 import { preventPageRefresh } from 'helpers';
-import { LOAN_TYPES, selectMortgageType, setMortgageType } from 'store/charts';
+import { selectMortgageType, setMortgageType } from 'store/charts';
 import NormalLoanForm from './mortgage-expense/normal-loan-form/NormalLoanForm';
 import SpitzerLoanForm from './mortgage-expense/spitzer-loan-form/SpitzerLoanForm';
 import OneTimeExpense from './one-time-expense/OneTimeExpense';
@@ -81,8 +82,8 @@ function ExpensesCard() {
   return (
     <Card elevation={3} className="expenses-card">
       <Tabs className="tabs" value={tab} onChange={handleChangeTab}>
-        <Tab label="One Time Expenses" />
-        <Tab label="Monthly Expenses" />
+        <Tab label={IS_MOBILE ? "One Time" : "One Time Expenses"} />
+        <Tab label={IS_MOBILE ? "Monthly" : "Monthly Expenses"} />
         <Tab label="Mortgage" />
       </Tabs>
 

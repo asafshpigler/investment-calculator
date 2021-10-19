@@ -24,24 +24,26 @@ function ChartCard() {
 
   return (
     <Card className="chart-card" elevation={3}>
-      <Typography className="title" variant="h4">
-        Property
-      </Typography>
+      <header className="chart-header">
+        <Typography className="title" variant="h4">
+          Property
+        </Typography>
 
-      <FormControl fullWidth>
-        <InputLabel id="select-property-id">Property ID</InputLabel>
-        <Select
-          labelId="select-property-id"
-          id="select-id"
-          label="PropertyId"
-          value={currentChart.propertyId || ''}
-          onChange={handleOnChange}
-        >
-          {propertyIds.map(id => (
-            <MenuItem key={id} value={id}>{id}</MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+        <FormControl>
+          <InputLabel id="select-property-id">Property ID</InputLabel>
+          <Select
+            labelId="select-property-id"
+            id="select-id"
+            label="PropertyId"
+            value={currentChart.propertyId || ''}
+            onChange={handleOnChange}
+          >
+            {propertyIds.map(id => (
+              <MenuItem key={id} value={id}>{id}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </header>
       
       <Chart />
     </Card>

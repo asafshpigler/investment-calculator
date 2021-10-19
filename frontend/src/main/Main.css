@@ -1,42 +1,27 @@
-.main {
-  padding: 50px 20px 0;
-  box-sizing: border-box
-}
-
-.chart-and-numbers-container {
-  display: flex;
-  justify-content: space-around;
+.chart-and-figures-container {
   margin-bottom: 24px;
 }
 
-.chart-and-numbers-container .chart-card {
-  flex-grow: 1;
-  max-width: 70%;
+@media only screen and (min-width: 600px) {
+  .main {
+    padding: 50px 20px 0;
+    box-sizing: border-box
+  }
+
+  .chart-and-figures-container {
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .chart-and-figures-container .chart-card {
+    flex-grow: 1;
+    max-width: 70%;
+    margin-right: 24px;
+  }
 }
 
-.property-numbers-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-}
-
-.property-number { 
-  padding: 20px;
-  text-align: center;
-}
-
-.property-number .number {
-  font-weight: bold;
-}
-
-.property-number.income {
-  background-color: aquamarine;
-}
-
-.property-number.expense {
-  background-color: lightcoral;
-}
-
-.property-number.profit {
-  background-color: lightskyblue;
+@media only screen and (max-width: 600px) {
+  .chart-and-figures-container .chart-card {
+    margin-bottom: 24px;
+  }
 }

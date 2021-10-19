@@ -1,7 +1,8 @@
 import * as api from 'api';
 import store from './store';
-import { setCharts, setCurrentChart, setPropertyIds, LOAN_TYPES, replaceChartInCharts } from 'store/charts';
+import { setCharts, setCurrentChart, setPropertyIds, replaceChartInCharts } from 'store/charts';
 import { setUserLoggedIn } from 'store/session';
+import { LOAN_TYPES } from 'const';
 
 export async function appLogin() {
   console.log('appLogin');

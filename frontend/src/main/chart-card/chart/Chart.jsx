@@ -4,6 +4,25 @@ import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import { useSelector } from 'react-redux';
 import { selectCurrentChart } from 'store/charts';
+import { IS_MOBILE } from 'const';
+
+const OPTIONS = {
+  aspectRatio: IS_MOBILE ? 1 : null,
+  scales: {
+    x: {
+      stacked: true,
+    },
+    y: {
+      stacked: true,
+      ticks: {
+        // Include a dollar sign in the ticks
+        callback: function (value) {
+          return value + '$';
+        }
+      }
+    }
+  },
+}
 
 const MultiType = () => {
   const currentChart = useSelector(selectCurrentChart);
@@ -44,25 +63,8 @@ const MultiType = () => {
     ]
   };
 
-  const options = {
-    scales: {
-      x: {
-        stacked: true,
-      },
-      y: {
-        stacked: true,
-        ticks: {
-          // Include a dollar sign in the ticks
-          callback: function (value) {
-            return value + '$';
-          }
-        }
-      }
-    },
-  }
-
   return (
-    <Bar data={data} options={options} />
+    <Bar data={data} options={OPTIONS} />
   )
 }
 

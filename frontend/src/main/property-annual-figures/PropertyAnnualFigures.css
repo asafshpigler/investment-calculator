@@ -1,0 +1,47 @@
+
+.property-figure { 
+  padding: 20px;
+  text-align: center;
+}
+
+.property-figure .number {
+  font-weight: bold;
+}
+
+.property-figure .txt {
+  display: flex;
+  flex-direction: column;
+}
+
+@media only screen and (min-width: 600px) {
+  .property-figures-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+  
+  .property-figure .txt {
+    font-size: 22px;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .property-figures-container {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .property-figure {
+    padding: 10px;
+  }
+  
+  .property-figure:not(:last-child) {
+    margin-right: 16px;
+  }
+  
+  .property-figure .txt {
+    font-size: 16px;
+    justify-content: space-around;
+    height: 100%;
+  }
+}
