@@ -1,4 +1,4 @@
-import { ChartDTO } from "../../../data-transfer-models";
+import { ChartDTO } from "../../../dataTransferModels";
 import { PropertyExpensesDBO } from "../../../db/models/PropertyExpenses";
 import { PropertyPeriodDBO } from "../../../db/models/PropertyPeriod";
 import * as db from "../../../db";

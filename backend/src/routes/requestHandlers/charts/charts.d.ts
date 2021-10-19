@@ -1,4 +1,4 @@
-import { MonthlyExpenseDTO, MortgageExpenseDTO, OneTimeExpenseDTO } from "../../../data-transfer-models";
+import { MonthlyExpenseDTO, MortgageExpenseDTO, OneTimeExpenseDTO } from "../../../dataTransferModels";
 
 export type PropertyMap = Map<number ,PropertyAttributes>;
 

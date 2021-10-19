@@ -11,7 +11,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 
 import {IS_MOBILE, LOAN_TYPES} from 'const';
-import { updateExpenses } from 'api-state-logic';
+import { updateExpenses } from 'controller';
 import { preventPageRefresh } from 'helpers';
 import { selectMortgageType, setMortgageType } from 'store/charts';
 import NormalLoanForm from './mortgage-expense/normal-loan-form/NormalLoanForm';

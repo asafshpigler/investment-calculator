@@ -24,6 +24,8 @@ export function loadPropertyIncomeData(): Promise<void> {
   return new Promise((resolve, reject) => {
     const queryPrms: Promise<QueryResult<any>>[] = [];
 
+    console.log('loadPropertyIncomeData');
+
     fs.createReadStream(FILE_PATH)
         .pipe(csv.parse({ headers: true }))
         .on('error', error => {
@@ -40,9 +42,7 @@ export function loadPropertyIncomeData(): Promise<void> {
             nightly_price: +csvRow.nightly_price,
             occupancy_rate: +csvRow.occupancy_rate,
           }
-  
-          console.log(dbRow);
-  
+    
           const query =
             `INSERT INTO property_period (property_id, year, month, nightly_price, occupancy_rate)
             VALUES (${dbRow.property_id}, ${dbRow.year}, ${dbRow.month}, ${dbRow.nightly_price}, ${dbRow.occupancy_rate})`;
@@ -52,7 +52,7 @@ export function loadPropertyIncomeData(): Promise<void> {
         })
 
         .on('end', (rowCount: number) => {
-          console.log(`Parsed ${rowCount} rows`);
+          console.log(`Finished Loading, Parsed ${rowCount} rows`);
 
           // wait for all queries to be completed
           Promise.all(queryPrms).then(() => {

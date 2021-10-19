@@ -1,6 +1,6 @@
 import moment from "moment";
 import { daysInMonth } from "./helpers";
-import { ChartDTO, MonthlyExpenseDTO, OneTimeExpenseDTO, SpitzerLoanDTO, SPITZER_LOAN } from "../../../data-transfer-models";
+import { ChartDTO, MonthlyExpenseDTO, OneTimeExpenseDTO, SpitzerLoanDTO, SPITZER_LOAN } from "../../../dataTransferModels";
 import { sum } from "./helpers";
 import { PropertyAttributes } from "./charts";
 

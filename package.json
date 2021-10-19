@@ -5,6 +5,7 @@
   "scripts": {
     "start": "(cd backend && npm start)",
     "build": "(cd frontend && npm i && npm run build) && (cd backend && npm i && npm run build && npm run setup-db)",
+    "clean": "rm -rf frontend/build && rm -rf backend/dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

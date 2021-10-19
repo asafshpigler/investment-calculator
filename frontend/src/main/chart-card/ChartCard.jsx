@@ -9,7 +9,7 @@ import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 
-import { setChartByPropertyId } from 'api-state-logic';
+import { setChartByPropertyId } from 'controller';
 import { selectCurrentChart, selectPropertyIds } from 'store/charts';
 import Chart from './chart/Chart';
 import './ChartCard.css';

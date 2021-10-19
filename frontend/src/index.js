@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import store from './store';
 import App from './App';
 import './index.css';
-import { appLogin } from 'api-state-logic';
+import { appLogin } from 'controller';
 
 appLogin().then(() => {
   ReactDOM.render(

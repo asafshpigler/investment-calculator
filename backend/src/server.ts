@@ -10,7 +10,7 @@ import attachRoutes from './routes/attachRoutes';
 const app = express();
 const PORT = 3080;
 
-app.use(express.static('../frontend/build'));
+app.use(express.static('frontend/build'));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json())
 app.use(session({

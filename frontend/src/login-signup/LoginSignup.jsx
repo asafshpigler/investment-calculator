@@ -6,7 +6,7 @@ import WarningIcon from '@mui/icons-material/Warning';
 import { preventPageRefresh } from '../helpers';
 import './LoginSignup.css';
 import { useHistory } from 'react-router';
-import { userLogin, signup } from 'api-state-logic';
+import { userLogin, signup } from 'controller';
 
 const LOGIN = 'LOGIN';
 const SIGN_UP = 'SIGN_UP';

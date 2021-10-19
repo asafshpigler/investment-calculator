@@ -1,4 +1,4 @@
-import { MonthlyExpenseDTO, MortgageExpenseDTO, NormalLoanDTO, NORMAL_LOAN, OneTimeExpenseDTO, SpitzerLoanDTO, SPITZER_LOAN } from "../../../data-transfer-models";
+import { MonthlyExpenseDTO, MortgageExpenseDTO, NormalLoanDTO, NORMAL_LOAN, OneTimeExpenseDTO, SpitzerLoanDTO, SPITZER_LOAN } from "../../../dataTransferModels";
 import { PropertyExpensesDBO } from "../../../db/models/PropertyExpenses";
 import { PropertyPeriodDBO } from "../../../db/models/PropertyPeriod";
 import { MonthId, PropertyAttributes, PropertyMap, PropertyMonth } from "./charts";

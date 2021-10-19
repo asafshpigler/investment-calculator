@@ -6,7 +6,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { useSelector } from 'react-redux';
 import { selectSession } from 'store/session';
-import { logout } from 'api-state-logic';
+import { logout } from 'controller';
 import { useHistory } from 'react-router';
 import { IS_MOBILE } from 'const';
 

@@ -1,5 +1,5 @@
 import * as db from "../../db";
-import { ChartDTO, MonthlyExpenseDTO, MortgageExpenseDTO, NormalLoanDTO, NORMAL_LOAN, OneTimeExpenseDTO, PropertyExpensesDTO, SpitzerLoanDTO, SPITZER_LOAN } from "../../data-transfer-models";
+import { ChartDTO, MonthlyExpenseDTO, MortgageExpenseDTO, NormalLoanDTO, NORMAL_LOAN, OneTimeExpenseDTO, PropertyExpensesDTO, SpitzerLoanDTO, SPITZER_LOAN } from "../../dataTransferModels";
 import { getChart } from '.';
 
 const DATE_STRING_REGEX = /\d{4}-\d{2}-\d{2}/;

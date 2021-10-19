@@ -1,4 +1,4 @@
-import { PgDate } from "../../../data-transfer-models";
+import { PgDate } from "../../../dataTransferModels";
 import { MonthId, PropertyAttributes, PropertyMonth } from "./charts";
 
 export function findPropertyFigures(propertyAttributes: PropertyMonth[], monthId: MonthId): PropertyMonth {

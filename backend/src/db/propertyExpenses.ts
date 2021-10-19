@@ -1,4 +1,4 @@
-import { PropertyExpensesDTO } from '../data-transfer-models';
+import { PropertyExpensesDTO } from '../dataTransferModels';
 import { PropertyExpensesDBO } from './models/PropertyExpenses';
 import * as db from '.';
 
