@@ -13,11 +13,11 @@ Prerequisites:
 
 Steps:
 1. clone the repo
-2. create .env file in /backend directory
-3. set .env values:
-    PORT - server port
-    SECRET - arbitrary value to encrypt cookies
-    DB_URI - uri of your local DB
-4. create local db named "invest-calc"
+2. create local DB named "invest-calc"
+3. create .env file in /backend directory
+4. set .env variables:<br>
+     PORT - server port<br>
+     SECRET - arbitrary string to encrypt cookies<br>
+     DB_URI - uri of your local DB
 5. npm run build
 6. npm start
