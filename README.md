@@ -1,7 +1,7 @@
 # Investment Calculator
 
-A tool to help real estate investors
-Visually understand the porfitability of properties they're considering to purchase
+Helping real estate investors make educated decisions by
+Visualizing porfitability of prospective properties
 
 [Check it out!](https://shpigler-investment-calculator.herokuapp.com/)
 
