@@ -1,6 +1,6 @@
 # Investment Calculator
 
-Helping real estate investors make educated decisions by
+Helping real estate investors make educated decisions by<br>
 Visualizing porfitability of prospective properties
 
 [Check it out!](https://shpigler-investment-calculator.herokuapp.com/)
