@@ -1,7 +1,7 @@
 # Investment Calculator
 
-Visualizing the expenses, income, and overall net revenue of several properties,
-supporting real estate investors in making more calculated investments
+A tool to help real estate investors
+Visually understand the porfitability of properties they're considering to purchase
 
 [Check it out!](https://shpigler-investment-calculator.herokuapp.com/)
 
@@ -13,9 +13,11 @@ Prerequisites:
 
 Steps:
 1. clone the repo
-2. place .env file* in /backend dir
-3. create local db named "invest-calc"
-4. npm run build
-5. npm start
-
-*I'll send it privately, you might need to modify DB_URI
+2. create .env file in /backend directory
+3. set .env values:
+    PORT - server port
+    SECRET - arbitrary value to encrypt cookies
+    DB_URI - uri of your local DB
+4. create local db named "invest-calc"
+5. npm run build
+6. npm start
